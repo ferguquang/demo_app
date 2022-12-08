@@ -177,11 +177,11 @@ class ApiCaller {
     if (isNeedAddToken)
       params["Token"] = await SharedPreferencesClass.getToken();
     // }
-    // try {
-    //   printParams(params, path);
-    // } catch (e) {
-    //   print("$e");
-    // }
+    try {
+      printParams(params, path);
+    } catch (e) {
+      print("$e");
+    }
     if (isLoading) {
       showLoading();
     }

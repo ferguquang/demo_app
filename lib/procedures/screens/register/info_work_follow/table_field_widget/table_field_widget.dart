@@ -374,7 +374,10 @@ class _TableFieldWidgetState extends State<TableFieldWidget>
                                 ),
                               ),
                               onTap: () {
-                                removeItem(index);
+                                // chưa hiểu sao chỗ này a Nhất lại dùng Opacity
+                                if (!widget.isReadonly) {
+                                  removeItem(index);
+                                }
                               },
                             ),
                           ),

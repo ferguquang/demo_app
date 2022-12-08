@@ -335,12 +335,13 @@ class ActionRepository with ChangeNotifier {
           context,
           SignalScreen(
             signalFile,
-            response.data?.serviceRecord?.iD,
+            response.data?.serviceRecord?.iD ?? idServiceRecord,
             "Ký ngay khi ký",
             signatureLocation: signatureLocation,
             signatures: response.data.userSignatures,
             action: response.data.action,
-            // paramsRegitster: params,
+            paramsRegitster: params,
+            isDoneInfoDATA: response.data.isDoneInfoDATA,
             iDGroupPdfForm: response.data.iDGroup.toString(),
           ));
     }

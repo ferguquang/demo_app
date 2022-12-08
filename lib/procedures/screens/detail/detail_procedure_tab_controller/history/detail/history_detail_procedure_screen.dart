@@ -188,6 +188,9 @@ class _HistoryDetailProcedureScreenState
   }
 
   Widget _buildRow(String title, String value, {bool isHeader}) {
+    if (isHeader == null) {
+      isHeader = false;
+    }
     TextStyle textStyle;
     if (isHeader == true)
       textStyle = TextStyle(color: Colors.black);
@@ -201,11 +204,18 @@ class _HistoryDetailProcedureScreenState
           child: Row(
             children: [
               Expanded(
-                  child: Text(
-                title,
-                style: textStyle,
+                flex: isHeader ? 10:  2,
+                child: Text(
+                  title,
+                  style: textStyle,
               )),
-              Text(value ?? '', style: textStyle)
+              Expanded(
+                flex: 8,
+                child: Text(
+                  "$value" ?? '', style: textStyle,
+                  textAlign: TextAlign.right,
+                )
+              )
             ],
           ),
         ),

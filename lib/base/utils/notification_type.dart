@@ -91,7 +91,7 @@ class NotificationType {
   }
   //Chi tiết giải quyết
   bool isDetailResolve(int type) {
-    return [36,5000].contains(type);
+    return [36, 375,5000].contains(type);
   }
 
   ///Quản lý kinh doanh

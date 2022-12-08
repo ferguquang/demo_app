@@ -28,6 +28,7 @@ import 'package:workflow_manager/procedures/widgets/photoview/src/utils/photo_vi
 import 'package:workflow_manager/procedures/widgets/pick_signal/pick_signal_screen.dart';
 
 import '../../../base/utils/common_function.dart';
+import '../../../base/utils/common_function.dart';
 import '../../models/response/data_signature_list_response.dart';
 import 'lazy_image_provider.dart';
 import 'signal_widget/signal_widget.dart';
@@ -582,7 +583,9 @@ class SignalScreenState extends State<SignalScreen> {
     params["IDGroupPdfForm"] = widget.iDGroupPdfForm;
     if (isNotNullOrEmpty(widget.action)) {
       params["IDServiceRecord"] = widget.idHoso;
-      params["PdfPath"] = widget.paramsRegitster["PdfPath"];
+      if (isNotNullOrEmpty(widget.paramsRegitster)) {
+        params["PdfPath"] = widget.paramsRegitster["PdfPath"];
+      }
       params["IsDoneInfoDATA"] = widget.isDoneInfoDATA;
       var json = await ApiCaller.instance
           .postFormData(widget.action, params);

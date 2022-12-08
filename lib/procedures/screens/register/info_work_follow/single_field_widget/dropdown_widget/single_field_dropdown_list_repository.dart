@@ -105,22 +105,24 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
     return textToDisplay;
   }
   _genTableRow(GenTableRow row){
-    ApiCaller.instance
-        .postFormData(row.link, {"IDSelected": value}).then((json) {
-      ContentMapResponse response = ContentMapResponse.fromJson(json);
-      if (response.isSuccess()) {
-        if (sendTableColListener != null) {
-          for(int i=0;i< row.targets.length;i++){
-            int id = int.parse(row.targets[i].replaceAll(RegExp(r"[^\d]+"), ""));
-            sendTableColListener?.forEach((element) {
-              element?.genTableRow(id, ((response.data[row.valueFroms[i]])as List)?.cast<Map<String,dynamic>>());
-            });
-          }
+    if (isNotNullOrEmpty(row.link)) {
+      ApiCaller.instance.postFormData(row.link, {"IDSelected": value}).then((json) {
+        ContentMapResponse response = ContentMapResponse.fromJson(json);
+        if (response.isSuccess()) {
+          if (sendTableColListener != null) {
+            for(int i=0;i< row.targets.length;i++){
+              int id = int.parse(row.targets[i].replaceAll(RegExp(r"[^\d]+"), ""));
+              sendTableColListener?.forEach((element) {
+                element?.genTableRow(id, ((response.data[row.valueFroms[i]])as List)?.cast<Map<String,dynamic>>());
+              });
+            }
 
+          }
         }
-      }
-    });
+      });
+    }
   }
+
   @override
   onTab() async {
     if (isReadonly) return;
@@ -180,7 +182,12 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
         hintSearchText: "Tìm kiếm",
         onAccept: (selected) {
           this.selected = selected;
-          if (isNullOrEmpty(selected)) return;
+          // if (isNullOrEmpty(selected)) return;
+
+          if (isNullOrEmpty(selected)) {
+
+          }
+
           List<String> ids = [];
           List<String> names = [];
           selected.forEach((element) {
@@ -234,7 +241,8 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
 
             List<ColumnLogic> show = props.show;
             List<ColumnLogic> hidden = props.hidden;
-            String valueDropdownData = selected[0].value;
+
+            String valueDropdownData = isNotNullOrEmpty(selected) ? selected[0].value : "";
 
             if (show != null) {
               for (int i = 0; i < show.length; i++) {
@@ -347,7 +355,7 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
                 sendTableColListener?.forEach((element) {
                   element?.updateCol(colIndexsChanged);
                 });
-              int selectedPosition = model.dropdownData.indexOf(selected[0]);
+              int selectedPosition = model.dropdownData.indexOf(isNotNullOrEmpty(selected) ? selected[0] : DropdownDatum());
               // khi click vào thì update item khác: updateValueRanges và updateSelectedValues xử lý logic giống nhau (sever đã confirm)
               if (updateValueRanges != null && updateValueRanges.length > 0) {
                 handleUpdateValue(i, updateValueRanges, fieldItem, model.dropdownData, selectedPosition);

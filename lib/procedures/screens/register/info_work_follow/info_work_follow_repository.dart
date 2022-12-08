@@ -4,7 +4,9 @@ import 'package:workflow_manager/base/models/base_response.dart';
 import 'package:workflow_manager/base/network/api_caller.dart';
 import 'package:workflow_manager/base/network/app_url.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
+import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/procedures/models/response/file_template.dart';
+import 'package:workflow_manager/procedures/models/response/single_field.dart';
 import 'package:workflow_manager/procedures/models/response/step_template_file.dart';
 import 'package:workflow_manager/procedures/models/params/info_work_follow_request.dart';
 import 'package:workflow_manager/procedures/models/params/list_work_follow_request.dart';
@@ -27,8 +29,7 @@ class InfoWorkFollowRepository extends ChangeNotifier {
         isUpdate ? AppUrl.getQTTTRegisterUpdate : AppUrl.getQTTTRegisterCreate;
     final response = await ApiCaller.instance.postFormData(api,
         isUpdate ? updateRequest.getParams() : createDataRequest.getParams());
-    RegisterCreateResponse registerCreateResponse =
-        RegisterCreateResponse.fromJson(response);
+    RegisterCreateResponse registerCreateResponse = RegisterCreateResponse.fromJson(response);
     if (registerCreateResponse.status == 1) {
       registerCreateModel = registerCreateResponse.data;
       isCheckGroupInfos = registerCreateModel.groupInfos.length > 0;
@@ -45,6 +46,15 @@ class InfoWorkFollowRepository extends ChangeNotifier {
         }
       }
       isHighPriority=registerCreateModel.priority==1;
+
+      for (int i = 0; i < registerCreateResponse.data.tableFields.length; i++) {
+        Field field = registerCreateResponse.data.tableFields[i];
+        if (field.props != null) {
+          if (isNotNullOrEmpty(field.props.cal)) {
+
+          }
+        }
+      }
       notifyListeners();
     } else {
       showErrorToast(registerCreateResponse.messages);

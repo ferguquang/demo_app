@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/procedures/models/response/response_procedure_detail.dart';
 import 'package:workflow_manager/procedures/models/response/solved_info.dart';
@@ -28,6 +29,8 @@ class _InfoDetailProcedureScreenState extends State<InfoDetailProcedureScreen> {
   CurrentStep currentStep;
   List<SolvedInfo> solvedInfoList;
 
+  ScrollController _controller = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +40,80 @@ class _InfoDetailProcedureScreenState extends State<InfoDetailProcedureScreen> {
     if (currentStep == null || currentStep.isDataEmpty() || widget.isReject) {
       currentStep = null;
     }
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      if (dataProcedureDetail.currentStep.isAutoSave ?? false) {
+        _controller.animateTo(100, duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn).then((value) {
+          print("object");
+        });
+      }
+    });
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      if (dataProcedureDetail.currentStep.isAutoSave ?? false) {
+        _controller.animateTo(_controller.position.maxScrollExtent, duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn).then((value) {
+          print("object");
+        });
+      }
+    });
   }
+  
+  // List<Widget> _listWidget() {
+  //   List<Widget> list = [];
+  //   if ((registerStep == null || registerStep.isRegisterFieldsDataEmpty()) &&
+  //       currentStep == null &&
+  //       isNullOrEmpty(solvedInfoList)) {
+  //     return list; // TH1: empty
+  //   } else if ((registerStep != null &&
+  //       !registerStep.isRegisterFieldsDataEmpty()) &&
+  //       currentStep == null &&
+  //       isNullOrEmpty(solvedInfoList)) {
+  //     list.add(RegisterStepWidget(registerStep, widget.type));
+  //     return list; // TH2: only has Register Info
+  //   } else if ((registerStep == null ||
+  //       registerStep.isRegisterFieldsDataEmpty()) &&
+  //       currentStep != null &&
+  //       isNullOrEmpty(solvedInfoList)) {
+  //     list.add(CurrentStepWidget(
+  //         currentStep,
+  //         widget.type,
+  //         widget.dataProcedureDetail.iDServiceRecord,
+  //         widget.dataProcedureDetail.iDServiceRecordWfStep,
+  //         widget.dataProcedureDetail.title
+  //     ));
+  //     return list; // TH3: only has current step
+  //   } else if ((registerStep == null ||
+  //       registerStep.isRegisterFieldsDataEmpty()) &&
+  //       currentStep == null &&
+  //       isNotNullOrEmpty(solvedInfoList)) {
+  //     for (int i = 0; i < solvedInfoList.length; i++) {
+  //       list.add(value)
+  //     }
+  //     return solvedInfoList.length; // TH4:  only has solve info list
+  //   } else if ((registerStep != null &&
+  //       !registerStep.isRegisterFieldsDataEmpty()) &&
+  //       currentStep != null &&
+  //       isNullOrEmpty(solvedInfoList)) {
+  //     return 2; // TH5: has registerInfo and currentStep
+  //   } else if ((registerStep != null &&
+  //       !registerStep.isRegisterFieldsDataEmpty()) &&
+  //       currentStep == null &&
+  //       isNotNullOrEmpty(solvedInfoList)) {
+  //     return 1 +
+  //         solvedInfoList.length; // TH6: has registerInfo and solvedInfoList
+  //   } else if ((registerStep == null ||
+  //       registerStep.isRegisterFieldsDataEmpty()) &&
+  //       currentStep != null &&
+  //       isNotNullOrEmpty(solvedInfoList)) {
+  //     return 1 +
+  //         solvedInfoList.length; // TH7: has currentStep and solvedInfoList
+  //   } else if ((registerStep != null &&
+  //       !registerStep.isRegisterFieldsDataEmpty()) &&
+  //       currentStep != null &&
+  //       isNotNullOrEmpty(solvedInfoList)) {
+  //     return 2 + solvedInfoList.length; // TH8: has all
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -50,28 +126,32 @@ class _InfoDetailProcedureScreenState extends State<InfoDetailProcedureScreen> {
       currentStep = null;
     }
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        child: ListView.builder(
-            itemCount: getItemCount(),
-            itemBuilder: (context, index) {
-              int type = getType(index);
-              switch (type) {
-                case type_current_step:
-                  return  CurrentStepWidget(
-                    currentStep,
-                    widget.type,
-                    widget.dataProcedureDetail.iDServiceRecord,
-                    widget.dataProcedureDetail.iDServiceRecordWfStep,
-                    widget.dataProcedureDetail.title
-                  );
-                case type_register_info:
-                  return RegisterStepWidget(registerStep, widget.type);
-                case type_item:
-                  return ItemWidget(solvedInfoList[index + 1], widget.type);
-                default:
-                  return Container();
-              }
-            }));
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: ListView.builder(
+        itemCount: getItemCount(),
+        controller: _controller,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          int type = getType(index);
+          switch (type) {
+            case type_current_step:
+              return  CurrentStepWidget(
+                currentStep,
+                widget.type,
+                widget.dataProcedureDetail.iDServiceRecord,
+                widget.dataProcedureDetail.iDServiceRecordWfStep,
+                widget.dataProcedureDetail.title,
+                _controller
+              );
+            case type_register_info:
+              return RegisterStepWidget(registerStep, widget.type);
+            case type_item:
+              return ItemWidget(solvedInfoList[index + 1], widget.type);
+            default:
+              return Container();
+          }
+        })
+    );
   }
 
   int getItemCount() {

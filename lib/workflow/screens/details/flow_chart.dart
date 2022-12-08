@@ -23,7 +23,10 @@ class _FlowChartState extends State<FlowChart> {
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    if (Platform.isAndroid) {
+      WebView.platform = SurfaceAndroidWebView();
+    }
+
     print("chart ${widget.url}");
   }
 
@@ -42,26 +45,49 @@ class _FlowChartState extends State<FlowChart> {
             IconButton(
               icon: Icon(Icons.refresh),
               onPressed: () {
+                _controller.clearCache();
                 _controller?.reload();
               },
             )
           ],
         ),
         body: WebView(
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (controller) {
-              _controller = controller;
-            },
-            onPageStarted: (url) {
-              ApiCaller.instance.showLoading();
-              isLoadingShowing = true;
-            },
-            onPageFinished: (url) {
-              ApiCaller.instance.hideLoading();
-              isLoadingShowing = false;
-            },
-            initialUrl: widget.url),
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (controller) {
+            _controller = controller;
+            _controller.clearCache();
+            print("onWebViewCreated");
+          },
+          onPageStarted: (url) {
+            print("onPageStarted: $url");
+            ApiCaller.instance.showLoading();
+            isLoadingShowing = true;
+          },
+          onPageFinished: (url) {
+            print("onPageFinished: $url");
+            ApiCaller.instance.hideLoading();
+            isLoadingShowing = false;
+          },
+          onWebResourceError: (erro) {
+            print(erro.description);
+          },
+          javascriptChannels: <JavascriptChannel>{
+            _toasterJavascriptChannel(context),
+          },
+          initialUrl: widget.url,
+          gestureNavigationEnabled: true,
+        ),
       ),
     );
+  }
+
+  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+        name: 'Toaster',
+        onMessageReceived: (JavascriptMessage message) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message.message)),
+          );
+        });
   }
 }

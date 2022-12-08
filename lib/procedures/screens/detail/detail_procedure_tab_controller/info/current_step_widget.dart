@@ -34,15 +34,16 @@ class CurrentStepWidget extends StatefulWidget {
   int iDServiceRecord;
   int idServiceRecordWfStep;
   String title;
+  ScrollController controller;
 
   CurrentStepWidget(
-      this.model, this.type, this.iDServiceRecord, this.idServiceRecordWfStep, this.title);
+      this.model, this.type, this.iDServiceRecord, this.idServiceRecordWfStep, this.title, this.controller);
 
   @override
   _CurrentStepWidgetState createState() => _CurrentStepWidgetState();
 }
 
-class _CurrentStepWidgetState extends State<CurrentStepWidget> {
+class _CurrentStepWidgetState extends State<CurrentStepWidget> with AutomaticKeepAliveClientMixin {
   CurrentStep model;
   SingleFieldWidget _singleFieldWidget;
   List<TableFieldWidget> _tableFieldWidget = [];
@@ -64,8 +65,6 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
         if (model.isAutoSave) {
           int status = await donePress();
           if (status == 1) {
-            // eventBus.fire(EventShowAction());
-
             showModalBottomSheet(
                 isScrollControlled: true,
                 context: mainGlobalKey.currentContext,
@@ -81,6 +80,12 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
           }
         }
       });
+
+      if (model.isAutoSave) {
+        widget.controller.animateTo(widget.controller.position.maxScrollExtent, duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn).then((value) {
+          print("object");
+        });
+      }
     });
   }
 
@@ -500,4 +505,7 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
