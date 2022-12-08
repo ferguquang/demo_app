@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:478082525076:android:96773e6982c28b063fd181",
         "android_client_info": {
-          "package_name": "vn.cetech.evngenco2"
+          "package_name": "vn.cetech.lionehaiphong"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "478082525076-frigomblloese62sfkjbbhjj23v0nccp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "vn.cetech.tpccantho"
+                "bundle_id": "vn.cetech.lionehaiphong"
               }
             }
           ]
