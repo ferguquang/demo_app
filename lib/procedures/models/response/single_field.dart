@@ -101,6 +101,7 @@ class Field {
     isMoney = json['IsMoney'];
     isReadonly = json['IsReadonly'];
     isDisabled = json['IsDisabled'];
+    isUnique = json['IsUnique'];
     hasDefault = json['HasDefault'];
     defaultValue = json['DefaultValue'];
     isHidden = json['IsHidden'];

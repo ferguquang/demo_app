@@ -76,6 +76,10 @@ class SingleFieldEditTextRepository extends SingleFieldRepositoryBase {
         String codeHienTai = fields[index].code;
         if (colRow.startsWith(codeHienTai + "=")) continue;
         List<String> cols = colRow.split(RegExp(r"[\+\-\*/\:\s=]+"));
+        for (int i = 0; i < cols.length; i++) {
+          cols[i] = cols[i].replaceAll("(", "").replaceAll(")", "");
+        }
+
         if (cols.contains(codeHienTai)) {
           colRow = replaceCode(colRow, codeHienTai,
               fields[index].isMoney ? getCurrencyFormat(value) : value);
@@ -83,12 +87,12 @@ class SingleFieldEditTextRepository extends SingleFieldRepositoryBase {
 
         List<String> splitColRow = colRow.split("=");
         String resultCol = splitColRow[0].trim(); // valueResult: cột kết quả
-        String recipe =
-            splitColRow[1].trim(); // công thức tính toán đã có value hiện tại
+        String recipe = splitColRow[1].trim(); // công thức tính toán đã có value hiện tại
         cols = recipe.split(RegExp(r"[\+\-\*/\:\s]+"));
         if (isNullOrEmpty(value)) {
           recipe = "";
         } else {
+          print("${fields.length}");
           for (int a = 0; a < fields.length; a++) {
             String code = fields[a].code;
             if (cols.contains(code)) {
@@ -100,6 +104,7 @@ class SingleFieldEditTextRepository extends SingleFieldRepositoryBase {
             }
           }
         }
+
         for (int a = 0; a < fields.length; a++) {
           if (resultCol == fields[a].code && isNotNullOrEmpty(resultCol)) {
             String resultColValue = calcString(recipe);

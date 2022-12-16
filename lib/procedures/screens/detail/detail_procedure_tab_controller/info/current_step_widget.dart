@@ -81,11 +81,11 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> with AutomaticKee
         }
       });
 
-      if (model.isAutoSave) {
-        widget.controller.animateTo(widget.controller.position.maxScrollExtent, duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn).then((value) {
-          print("object");
-        });
-      }
+      // if (model.isAutoSave) {
+      //   widget.controller.animateTo(widget.controller.position.maxScrollExtent, duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn).then((value) {
+      //     print("object");
+      //   });
+      // }
     });
   }
 

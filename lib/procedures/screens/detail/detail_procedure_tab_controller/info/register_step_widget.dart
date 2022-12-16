@@ -31,7 +31,7 @@ class _RegisterStepWidgetState extends State<RegisterStepWidget> {
     _singleFieldWidget = SingleFieldWidget(
       model?.singleFields,
       isReadonly: true,
-      isViewInOneRow: true,
+      isViewInOneRow: false,
     );
     _tableFieldWidget = [];
     for (TableFieldInfo tableList in model?.fieldTableList?.tableFieldInfos) {

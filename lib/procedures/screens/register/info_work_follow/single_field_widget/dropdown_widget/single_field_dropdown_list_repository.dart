@@ -51,7 +51,16 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
             .map((e) => e.text)
             .join(", ");
       } else {
-        if (isNotNullOrEmpty(model.dropdownData)) {
+        if (model.apiSource != null) {
+          String apiLink = model.apiSource.apiLink;
+          Map<String, dynamic> params = Map();
+          params["ID"] = value;
+          ApiCaller.instance.postFormData(apiLink, params).then((json) {
+            DataObjectApiSourceResponse response = DataObjectApiSourceResponse.fromJson(json);
+            textToDisplay = response.data.category.name;
+            notifyListeners();
+          });
+        } else if (isNotNullOrEmpty(model.dropdownData)) {
           var list = model.dropdownData
               .where((element) => value == element.value)
               .map((e) => e.text)
@@ -101,6 +110,7 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
         _genTableRow(row);
       }
     }
+
     notifyListeners();
     return textToDisplay;
   }
@@ -143,7 +153,6 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
           if (isNotNullOrEmpty(code)) {
             Field codeField = fields.firstWhere((element) => element.code == code);
             params[paramsName] = codeField.value;
-            print("");
           }
         }
         params["IsConvertDropdownData"] = 1;
@@ -171,7 +180,6 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
         return;
       }
     }
-
 
     ChoiceDialog choiceDialog = ChoiceDialog<DropdownDatum>(
         context, dropdownList,
@@ -213,208 +221,206 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
                 calculateUpdateInfoInSingleField(updateInfo);
               }
             }
-          } else {
-            Props props = model.props;
-            if (props != null &&
-                props.updateApiLinkDropDowns != null &&
-                sendTableColListener != null) {
-              String value = selected.length == 0 ? "" : selected.first.value;
-              List<LogicColumnUpdate> updateApiLinkDropDowns =
-                  props.updateApiLinkDropDowns;
-              if (value != null && updateApiLinkDropDowns != null) {
-                for (LogicColumnUpdate columnUpdate in updateApiLinkDropDowns) {
-                  if (value == columnUpdate.refValue) {
+          }
+
+          Props props = model.props;
+          if (props != null &&
+              props.updateApiLinkDropDowns != null &&
+              sendTableColListener != null) {
+            String value = selected.length == 0 ? "" : selected.first.value;
+            List<LogicColumnUpdate> updateApiLinkDropDowns =
+                props.updateApiLinkDropDowns;
+            if (value != null && updateApiLinkDropDowns != null) {
+              for (LogicColumnUpdate columnUpdate in updateApiLinkDropDowns) {
+                if (value == columnUpdate.refValue) {
+                  sendTableColListener?.forEach((element) {
+                    element?.onClearDataInTableField(columnUpdate.targets);
+                  });
+                }
+              }
+            }
+          }
+          List<int> changeIndexs = [];
+          List<ColumnLogic> updateSelectedValues = props.updateSelectedValue;
+          List<ColumnLogic> updateValueRanges = props.updateValueRange;
+          List<ColumnLogic> hiddenCol = props.hiddenCol;
+          List<ColumnLogic> showCol = props.showCol;
+          List<ColumnLogic> enableCol = props.enableCol;
+          List<ColumnLogic> readOnlyCol = props.readonlyCol;
+
+          List<ColumnLogic> show = props.show;
+          List<ColumnLogic> hidden = props.hidden;
+
+          String valueDropdownData = isNotNullOrEmpty(selected) ? selected[0].value : "";
+
+          if (show != null) {
+            for (int i = 0; i < show.length; i++) {
+              List<String> targets = show[i].targets;
+              String refValue = show[i].refValue;
+              if (refValue ==
+                  valueDropdownData) // so sánh với refValue để lấy giá trị
+                  {
+                for (int a = 0; a < targets.length; a++) {
+                  String column = targets[a];
+                  for (int c = 0; c < fields.length; c++) {
+                    String code = fields[c].code;
+                    if (column == code) {
+                      fields[c].isHidden = false;
+                      changeIndexs.add(c);
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          if (hidden != null) {
+            for (int i = 0; i < hidden.length; i++) {
+              List<String> targets = hidden[i].targets;
+              String refValue = hidden[i].refValue;
+              if (refValue == valueDropdownData)
+                // so sánh với refValue để lấy giá trị
+                  {
+                for (int a = 0; a < targets.length; a++) {
+                  String column = targets[a];
+                  for (int c = 0; c < fields.length; c++) {
+                    String code = fields[c].code;
+                    if (column == code) {
+                      fields[c].isHidden = true;
+                      changeIndexs.add(c);
+                    }
+                  }
+                }
+              }
+            }
+          }
+          notifyChangedAll(changeIndexs);
+          // check các cột bị ảnh hưởng trong TableField
+          List<Pair<int, String>> colIndexsChanged = [];
+          for (int i = 0; i < fields.length; i++) {
+            Field fieldItem = fields[i];
+
+            // set enable column:
+            if (enableCol != null && enableCol.length > 0) {
+              for (int a = 0; a < enableCol.length; a++) {
+                String refValue = enableCol[a].refValue;
+                if (valueDropdownData == refValue) {
+                  List<String> targets = enableCol[a].targets;
+                  for (int b = 0; b < targets.length; b++) {
+                    String colReplace = targets[b];
+                    colIndexsChanged.add(Pair(
+                        SendTableColListener.TYPE_ENABLE_COL, colReplace));
+                  }
+                }
+              }
+            }
+            // set readonlyCol:
+
+            if (readOnlyCol != null && readOnlyCol.length > 0) {
+              for (int a = 0; a < readOnlyCol.length; a++) {
+                String refValue = readOnlyCol[a].refValue;
+                if (valueDropdownData == refValue) {
+                  List<String> targets = readOnlyCol[a].targets;
+                  for (int b = 0; b < targets.length; b++) {
+                    String colReplace = targets[b];
+                    colIndexsChanged.add(Pair(
+                        SendTableColListener.TYPE_READONLY_COL, colReplace));
+                  }
+                }
+              }
+            }
+
+            // set item hiện:
+            if (showCol != null && showCol.length > 0) {
+              for (int a = 0; a < showCol.length; a++) {
+                if (valueDropdownData == showCol[a].refValue) {
+                  List<String> targets = showCol[a].targets;
+                  for (int b = 0; b < targets.length; b++) {
+                    String colReplace = targets[b];
+                    colIndexsChanged.add(
+                        Pair(SendTableColListener.TYPE_SHOW_COL, colReplace));
+                  }
+                }
+              }
+            }
+
+            // set item ẩn
+            if (hiddenCol != null && hiddenCol.length > 0) {
+              for (int a = 0; a < hiddenCol.length; a++) {
+                if (valueDropdownData ==
+                    hiddenCol[a]
+                        .refValue) // so sánh Value của Dropdowndata với RefValue của Hidden Col
+                    {
+                  List<String> targets = hiddenCol[a].targets;
+                  for (int b = 0; b < targets.length; b++) {
+                    String colReplace = targets[b];
+                    colIndexsChanged.add(Pair(
+                        SendTableColListener.TYPE_HIDDEN_COL, colReplace));
+                  }
+                }
+              }
+            }
+            if (sendTableColListener != null)
+              sendTableColListener?.forEach((element) {
+                element?.updateCol(colIndexsChanged);
+              });
+            int selectedPosition = model.dropdownData.indexOf(isNotNullOrEmpty(selected) ? selected[0] : DropdownDatum());
+            // khi click vào thì update item khác: updateValueRanges và updateSelectedValues xử lý logic giống nhau (sever đã confirm)
+            if (updateValueRanges != null && updateValueRanges.length > 0) {
+              handleUpdateValue(i, updateValueRanges, fieldItem, model.dropdownData, selectedPosition);
+            }
+
+            if (updateSelectedValues != null && updateSelectedValues.length > 0) {
+              handleUpdateValue(i, updateSelectedValues, fieldItem, model.dropdownData, selectedPosition);
+            }
+          }
+          // todo update Tháng 9-2020
+          // updateAPILinkDropdown:
+          List<LogicColumnUpdate> updateApiLinkDropDowns =
+              props.updateApiLinkDropDowns;
+          if (updateApiLinkDropDowns != null &&
+              updateApiLinkDropDowns.length > 0) {
+            // chỉ có 1 item:
+            for (int a = 0; a < updateApiLinkDropDowns.length; a++) {
+              LogicColumnUpdate updateAPILinkDropdown =
+              updateApiLinkDropDowns[a];
+              if (valueDropdownData == updateAPILinkDropdown.refValue) {
+                List<String> targets = updateAPILinkDropdown
+                    .targets; // lấy danh sách cột bị ảnh hưởng (chỉ có 1):
+                List<String> params = updateAPILinkDropdown.params;
+                if (targets.length > 0) {
+                  String link = updateAPILinkDropdown.link;
+                  if (sendTableColListener != null) {
                     sendTableColListener?.forEach((element) {
-                      element?.onClearDataInTableField(columnUpdate.targets);
+                      element?.sendUpdateApiLinkDropDown(
+                          targets, link, params);
                     });
                   }
                 }
+
+                break;
               }
             }
-            List<int> changeIndexs = [];
-            List<ColumnLogic> updateSelectedValues = props.updateSelectedValue;
-            List<ColumnLogic> updateValueRanges = props.updateValueRange;
-            List<ColumnLogic> hiddenCol = props.hiddenCol;
-            List<ColumnLogic> showCol = props.showCol;
-            List<ColumnLogic> enableCol = props.enableCol;
-            List<ColumnLogic> readOnlyCol = props.readonlyCol;
+          }
 
-            List<ColumnLogic> show = props.show;
-            List<ColumnLogic> hidden = props.hidden;
-
-            String valueDropdownData = isNotNullOrEmpty(selected) ? selected[0].value : "";
-
-            if (show != null) {
-              for (int i = 0; i < show.length; i++) {
-                List<String> targets = show[i].targets;
-                String refValue = show[i].refValue;
-                if (refValue ==
-                    valueDropdownData) // so sánh với refValue để lấy giá trị
+          // calculateWithApiReturnStringValues
+          List<LogicColumnUpdate> calculateWithApiReturnStringValues =
+              props.calculateWithApiReturnStringValues;
+          if (calculateWithApiReturnStringValues != null) {
+            if (calculateWithApiReturnStringValues.length > 0) // chỉ có 1
                 {
-                  for (int a = 0; a < targets.length; a++) {
-                    String column = targets[a];
-                    for (int c = 0; c < fields.length; c++) {
-                      String code = fields[c].code;
-                      if (column == code) {
-                        fields[c].isHidden = false;
-                        changeIndexs.add(c);
-                      }
-                    }
-                  }
-                }
-              }
+              LogicColumnUpdate calculateWithApi =
+              calculateWithApiReturnStringValues[0];
+              calculateWithApiListener(calculateWithApi, false);
             }
+          }
 
-            if (hidden != null) {
-              for (int i = 0; i < hidden.length; i++) {
-                List<String> targets = hidden[i].targets;
-                String refValue = hidden[i].refValue;
-                if (refValue == valueDropdownData)
-                // so sánh với refValue để lấy giá trị
+          List<LogicColumnUpdate> calculateWithApis = props.calculateWithApi;
+          if (calculateWithApis != null) {
+            if (calculateWithApis.length > 0) // chỉ có 1
                 {
-                  for (int a = 0; a < targets.length; a++) {
-                    String column = targets[a];
-                    for (int c = 0; c < fields.length; c++) {
-                      String code = fields[c].code;
-                      if (column == code) {
-                        fields[c].isHidden = true;
-                        changeIndexs.add(c);
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            notifyChangedAll(changeIndexs);
-            // check các cột bị ảnh hưởng trong TableField
-            List<Pair<int, String>> colIndexsChanged = [];
-            for (int i = 0; i < fields.length; i++) {
-              Field fieldItem = fields[i];
-
-              // set enable column:
-              if (enableCol != null && enableCol.length > 0) {
-                for (int a = 0; a < enableCol.length; a++) {
-                  String refValue = enableCol[a].refValue;
-                  if (valueDropdownData == refValue) {
-                    List<String> targets = enableCol[a].targets;
-                    for (int b = 0; b < targets.length; b++) {
-                      String colReplace = targets[b];
-                      colIndexsChanged.add(Pair(
-                          SendTableColListener.TYPE_ENABLE_COL, colReplace));
-                    }
-                  }
-                }
-              }
-              // set readonlyCol:
-
-              if (readOnlyCol != null && readOnlyCol.length > 0) {
-                for (int a = 0; a < readOnlyCol.length; a++) {
-                  String refValue = readOnlyCol[a].refValue;
-                  if (valueDropdownData == refValue) {
-                    List<String> targets = readOnlyCol[a].targets;
-                    for (int b = 0; b < targets.length; b++) {
-                      String colReplace = targets[b];
-                      colIndexsChanged.add(Pair(
-                          SendTableColListener.TYPE_READONLY_COL, colReplace));
-                    }
-                  }
-                }
-              }
-
-              // set item hiện:
-              if (showCol != null && showCol.length > 0) {
-                for (int a = 0; a < showCol.length; a++) {
-                  if (valueDropdownData == showCol[a].refValue) {
-                    List<String> targets = showCol[a].targets;
-                    for (int b = 0; b < targets.length; b++) {
-                      String colReplace = targets[b];
-                      colIndexsChanged.add(
-                          Pair(SendTableColListener.TYPE_SHOW_COL, colReplace));
-                    }
-                  }
-                }
-              }
-
-              // set item ẩn
-              if (hiddenCol != null && hiddenCol.length > 0) {
-                for (int a = 0; a < hiddenCol.length; a++) {
-                  if (valueDropdownData ==
-                      hiddenCol[a]
-                          .refValue) // so sánh Value của Dropdowndata với RefValue của Hidden Col
-                  {
-                    List<String> targets = hiddenCol[a].targets;
-                    for (int b = 0; b < targets.length; b++) {
-                      String colReplace = targets[b];
-                      colIndexsChanged.add(Pair(
-                          SendTableColListener.TYPE_HIDDEN_COL, colReplace));
-                    }
-                  }
-                }
-              }
-              if (sendTableColListener != null)
-                sendTableColListener?.forEach((element) {
-                  element?.updateCol(colIndexsChanged);
-                });
-              int selectedPosition = model.dropdownData.indexOf(isNotNullOrEmpty(selected) ? selected[0] : DropdownDatum());
-              // khi click vào thì update item khác: updateValueRanges và updateSelectedValues xử lý logic giống nhau (sever đã confirm)
-              if (updateValueRanges != null && updateValueRanges.length > 0) {
-                handleUpdateValue(i, updateValueRanges, fieldItem, model.dropdownData, selectedPosition);
-              }
-
-              if (updateSelectedValues != null &&
-                  updateSelectedValues.length > 0) {
-                handleUpdateValue(i, updateSelectedValues, fieldItem,
-                    model.dropdownData, selectedPosition);
-              }
-            }
-            // todo update Tháng 9-2020
-            // updateAPILinkDropdown:
-            List<LogicColumnUpdate> updateApiLinkDropDowns =
-                props.updateApiLinkDropDowns;
-            if (updateApiLinkDropDowns != null &&
-                updateApiLinkDropDowns.length > 0) {
-              // chỉ có 1 item:
-              for (int a = 0; a < updateApiLinkDropDowns.length; a++) {
-                LogicColumnUpdate updateAPILinkDropdown =
-                    updateApiLinkDropDowns[a];
-                if (valueDropdownData == updateAPILinkDropdown.refValue) {
-                  List<String> targets = updateAPILinkDropdown
-                      .targets; // lấy danh sách cột bị ảnh hưởng (chỉ có 1):
-                  List<String> params = updateAPILinkDropdown.params;
-                  if (targets.length > 0) {
-                    String link = updateAPILinkDropdown.link;
-                    if (sendTableColListener != null) {
-                      sendTableColListener?.forEach((element) {
-                        element?.sendUpdateApiLinkDropDown(
-                            targets, link, params);
-                      });
-                    }
-                  }
-
-                  break;
-                }
-              }
-            }
-
-            // calculateWithApiReturnStringValues
-            List<LogicColumnUpdate> calculateWithApiReturnStringValues =
-                props.calculateWithApiReturnStringValues;
-            if (calculateWithApiReturnStringValues != null) {
-              if (calculateWithApiReturnStringValues.length > 0) // chỉ có 1
-              {
-                LogicColumnUpdate calculateWithApi =
-                    calculateWithApiReturnStringValues[0];
-                calculateWithApiListener(calculateWithApi, false);
-              }
-            }
-
-            List<LogicColumnUpdate> calculateWithApis = props.calculateWithApi;
-            if (calculateWithApis != null) {
-              if (calculateWithApis.length > 0) // chỉ có 1
-              {
-                LogicColumnUpdate calculateWithApi = calculateWithApis[0];
-                calculateWithApiListener(calculateWithApi, false);
-              }
+              LogicColumnUpdate calculateWithApi = calculateWithApis[0];
+              calculateWithApiListener(calculateWithApi, false);
             }
           }
         });

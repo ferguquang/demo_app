@@ -178,7 +178,15 @@ class SingleFieldRepositoryBase extends ChangeNotifier {
       String origin = updateSelectItem.origin;
       if (code == origin) // check code của cột bị ảnh hưởng
       {
-        List<Attribute> attributes = dropdownDatumList[positionDropDownSelected].attributes;
+        List<Attribute> attributes = [];
+        if (positionDropDownSelected > 0) {
+          attributes = dropdownDatumList[positionDropDownSelected].attributes;
+        } else {
+          attributes.add(Attribute(
+            key: target,
+            value: "0"
+          ));
+        }
         for (int c = 0; c < attributes.length; c++) {
           String keyAttributes = attributes[c].key.toLowerCase();
           if (target == keyAttributes) {
@@ -295,7 +303,12 @@ class SingleFieldRepositoryBase extends ChangeNotifier {
   }
 
   void initWidget() {
-    isVisible = !(model.isHiddenOnView || model.isHidden);
+    if (model.isHidden || model.isHiddenOnView) {
+      isVisible = false;
+    } else {
+      isVisible = true;
+    }
+    // isVisible = !(model.isHiddenOnView || model.isHidden);
     notifyListeners();
   }
 

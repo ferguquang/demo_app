@@ -76,3 +76,36 @@ class DataListDynamiclly {
   }
 }
 
+// lấy thông tin của 1 object trong apisource
+class DataObjectApiSourceResponse extends BaseResponse {
+  int status;
+  DataObjectApiSource data;
+
+  DataObjectApiSourceResponse.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+    status = json['Status'];
+    data = json['Data'] != null ? new DataObjectApiSource.fromJson(json['Data']) : null;
+  }
+}
+
+class DataObjectApiSource {
+  Category category;
+
+  DataObjectApiSource({this.category});
+
+  DataObjectApiSource.fromJson(Map<String, dynamic> json) {
+    category = json['Category'] != null
+        ? new Category.fromJson(json['Category'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.category != null) {
+      data['Category'] = this.category.toJson();
+    }
+    return data;
+  }
+}
+
+
+

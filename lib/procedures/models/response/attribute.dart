@@ -3,6 +3,8 @@ class Attribute {
 
   String value;
 
+  Attribute({this.key, this.value});
+
   Attribute.fromJson(Map<String, dynamic> json) {
     key = json['Key'];
     value = json['Value'];

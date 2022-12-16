@@ -820,7 +820,7 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
         String codeName = tableFields[column].name;
         for (int a = 0; a < listValueColumn.length; a++) {
           if (isContainDuplicate(listValueColumn)) {
-            showErrorToast(codeName + " đã bị trùng!!!");
+            showErrorToast(codeName + " [${tableFieldWidget.tableName}] đã bị trùng!!!");
             return false;
           }
         }

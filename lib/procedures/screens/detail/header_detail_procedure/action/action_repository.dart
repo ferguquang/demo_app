@@ -96,14 +96,6 @@ class ActionRepository with ChangeNotifier {
 
         return response.status;
       } else {
-        // chỗ này đổi logic
-        // if (conditions.schemaConditionType == 0 && !isOnEventBus) {
-        //   eventBus.fire(EventDoneAutoSave(
-        //     conditions: conditions,
-        //     isReject: isReject
-        //   ));
-        // }
-
         //data - thông tin xác nhận chuyển bước
         IsDoneInfoRequest infoRequest = IsDoneInfoRequest();
         infoRequest.id = idServiceRecord;

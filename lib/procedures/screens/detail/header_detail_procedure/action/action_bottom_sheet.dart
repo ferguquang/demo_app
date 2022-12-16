@@ -182,13 +182,13 @@ class _ActionBottomSheetState extends State<ActionBottomSheet> {
                   SaveButton(
                     onTap: () async {
                       if (widget.isReject) {
-                        int idNextStep =
-                            repository.dataIsResentInfo.iDServiceRecordWfStep;
+                        int idNextStep = repository.dataIsResentInfo.iDServiceRecordWfStep;
                         int status = await _repository.registerResentInfo(
-                            context,
-                            idNextStep,
-                            widget.idServiceRecord,
-                            controller.text);
+                          context,
+                          idNextStep,
+                          widget.idServiceRecord,
+                          controller.text
+                        );
                         if (status == 1) {
                           eventBus
                               .fire(EventReloadDetailProcedure(isFinish: true));

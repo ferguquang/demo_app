@@ -26,6 +26,7 @@ import 'package:workflow_manager/models/response/mechanical_work_sheets_response
 import 'package:workflow_manager/models/response/work_commands_response.dart';
 import 'package:workflow_manager/models/response/work_sheets_response.dart';
 import 'package:workflow_manager/procedures/screens/detail/detail_procedure_screen.dart';
+import 'package:workflow_manager/procedures/screens/resolve/list/list_resolve_screen.dart';
 import 'package:workflow_manager/storage/models/params/check_download_file_request.dart';
 import 'package:workflow_manager/storage/screens/list_storage/list_storage_repository.dart';
 import 'package:workflow_manager/storage/screens/list_storage/list_storage_screen.dart';
@@ -195,6 +196,9 @@ class OneSignalManager {
     String name = notificationInfo.message;
     String path = notificationInfo.path;
     String link = notificationInfo.link;
+    if (type == 377 || type == 378) {
+      return;
+    }
     print(
         "XnavigationTargetScreen type = ${type} iDContent = ${iDContent} isFolder = ${isFolder}");
     // Quản lý công việc
@@ -341,7 +345,8 @@ class OneSignalManager {
             DetailProcedureScreen(
               idServiceRecord: iDContent,
               type: DetailProcedureScreen.TYPE_RESOLVE,
-              state: null,
+              // state: null,
+              state: ListResolveScreen.TYPE_PENDING,
             ));
       return;
     }

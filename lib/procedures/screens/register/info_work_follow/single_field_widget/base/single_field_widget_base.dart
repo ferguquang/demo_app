@@ -17,7 +17,8 @@ class SingleFieldWidgetBase extends StatefulWidget {
   bool isViewInOneRow;
 
   bool isVisible() {
-    return isViewInOneRow ? !field.isHiddenOnView : !field.isHidden;
+    bool isVi = isViewInOneRow ? !field.isHiddenOnView : !field.isHidden;
+    return isVi;
   }
   SingleFieldWidgetBase(this.field, this.isReadonly, this.isViewInOneRow,
       {GlobalKey key, this.verticalPadding = 4})

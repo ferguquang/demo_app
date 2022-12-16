@@ -531,7 +531,7 @@ class SignalScreenState extends State<SignalScreen> {
                       Navigator.pop(context, widget.signatures != null ? isSuccess : null);
                     }
                   } else {
-                    showErrorToast("Mật khẩu sai");
+                    // showErrorToast("Mật khẩu sai");
                   }
                 },
               )
@@ -616,7 +616,8 @@ class SignalScreenState extends State<SignalScreen> {
         DataRegisterSaveResponse response =
             DataRegisterSaveResponse.fromJson(json);
         if (response.status == 1) {
-          // Navigator.pop(context, response);
+          ToastMessage.show("Ký thành công", ToastStyle.success);
+          Navigator.pop(context, response);
           eventBus.fire(
               EventReloadDetailProcedure(response: response, isFinish: true));
           return true;

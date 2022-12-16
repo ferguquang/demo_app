@@ -51,7 +51,20 @@ class InfoWorkFollowRepository extends ChangeNotifier {
         Field field = registerCreateResponse.data.tableFields[i];
         if (field.props != null) {
           if (isNotNullOrEmpty(field.props.cal)) {
-
+            String cal = field.props.cal.first;
+            List<String> splitColRow = cal.split("=");
+            String recipe = splitColRow[1].trim();
+            List<String> cols = recipe.split(RegExp(r"[\+\-\*/\:\s]+"));
+            for (int a = 0; a < cols.length; a++) {
+              String code = cols[a].replaceAll(")", "").replaceAll("(", "");
+              for (int b = 0; b < registerCreateResponse.data.tableFields.length; b++) {
+                String codeOrigin = registerCreateResponse.data.tableFields[b].code;
+                if (code == codeOrigin) {
+                  registerCreateResponse.data.tableFields[b].props.cal = [];
+                  registerCreateResponse.data.tableFields[b].props.cal.add(cal);
+                }
+              }
+            }
           }
         }
       }
