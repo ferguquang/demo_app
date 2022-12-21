@@ -43,7 +43,13 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         child: SafeArea(
           child: Stack (
             children: [
-              Center(child: SVGImage(svgName: 'white_icon')),
+              Center(
+                // child: SVGImage(svgName: 'white_icon')
+                child: SizedBox(
+                  height: 150,
+                  child: Image.asset('assets/icons/icon_app_chinhphu.png')
+                )
+              ),
               Container(
                 alignment: Alignment.bottomCenter,
                 decoration: BoxDecoration(

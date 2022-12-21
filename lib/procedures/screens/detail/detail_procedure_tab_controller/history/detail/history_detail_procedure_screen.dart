@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
+import 'package:workflow_manager/base/utils/file_utils.dart';
 import 'package:workflow_manager/procedures/models/params/detail_procedure_request.dart';
 import 'package:workflow_manager/procedures/models/response/field_table_list.dart';
 import 'package:workflow_manager/procedures/models/response/info_step_history_response.dart';
@@ -141,6 +142,7 @@ class _HistoryDetailProcedureScreenState
                                 historyInfo?.doneDate ?? 0, "dd-MM-yyyy HH:mm")
                             .replaceAll("-", "/")),
                 _buildRow("Tiến độ xử lý", historyInfo?.progressTime ?? ""),
+                _attachFiles(historyInfo),
                 _buildRow("Thông tin giải quyết", "", isHeader: true),
                 _buildRow("Trạng thái xử lý", historyInfo?.statusProcess ?? ""),
                 _buildRow(
@@ -183,6 +185,57 @@ class _HistoryDetailProcedureScreenState
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _attachFiles(HistoryInfo historyInfo) {
+    if (isNullOrEmpty(historyInfo.attachedFiles)) {
+      return SizedBox();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              "File đính kèm",
+              style: TextStyle(color: color),
+            )
+          ),
+          Expanded(
+            flex: 8,
+            child: ListView.builder(
+              itemCount: historyInfo.attachedFiles.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    FileUtils.instance.downloadFileAndOpen(
+                      historyInfo.attachedFiles[index].name,
+                      historyInfo.attachedFiles[index].path,
+                      context,
+                      isOpenFile: true,
+                      isShowSuccess: true
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Text(
+                      "${historyInfo.attachedFiles[index].name}",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        color: Colors.blue
+                      ),
+                    ),
+                  ),
+                );
+              }
+            ),
+          ),
+        ],
       ),
     );
   }

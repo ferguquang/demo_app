@@ -145,11 +145,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: SizedBox(
                         width: 140,
                         height: 140,
-                        child: SVGImage(svgName: "logo_app"),
+                        // child: SVGImage(svgName: "logo_app"),
+                        child: Image.asset('assets/icons/icon_app_chinhphu.png'),
                       ),
                     ),
                     Text(
-                      "Hệ thống quy trình nội bộ",
+                      // "Hệ thống quy trình nội bộ",
+                      "Ban quản lý các dự án",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: getColor("#2c56a6"),

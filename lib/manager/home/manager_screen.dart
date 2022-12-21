@@ -440,7 +440,8 @@ class _ManagerScreenState extends State<ManagerScreen>
             Container(
               alignment: Alignment.center,
               child: Text(
-                isNotNullOrEmpty(_managerRepository.nameApp) ? _managerRepository.nameApp : "Quy trình nội bộ",
+                // isNotNullOrEmpty(_managerRepository.nameApp) ? _managerRepository.nameApp : "Quy trình nội bộ",
+                isNotNullOrEmpty(_managerRepository.nameApp) ? _managerRepository.nameApp : "Ban quản lý các dự án",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white,

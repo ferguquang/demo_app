@@ -51,7 +51,8 @@ class InfoWorkFollowRepository extends ChangeNotifier {
         Field field = registerCreateResponse.data.tableFields[i];
         if (field.props != null) {
           if (isNotNullOrEmpty(field.props.cal)) {
-            String cal = field.props.cal.first;
+            String cal = field.props.cal.first.replaceAll("(", "").replaceAll(")", "");
+            // String cal = field.props.cal.first;
             List<String> splitColRow = cal.split("=");
             String recipe = splitColRow[1].trim();
             List<String> cols = recipe.split(RegExp(r"[\+\-\*/\:\s]+"));
@@ -75,7 +76,9 @@ class InfoWorkFollowRepository extends ChangeNotifier {
   }
 
   void addAttachFile(UploadModel uploadModel) {
+    int id = DateTime.now().millisecondsSinceEpoch; // dùng cho trường hợp ký file ngay khi bắt đầu vào màn đăng ký
     registerCreateModel.attachedFiles.add(FileTemplate(
+        iD: id,
         fileName: uploadModel.fileName,
         path: uploadModel.filePath,
         isSignFile: false));

@@ -22,7 +22,6 @@ class ActionRepository with ChangeNotifier {
   DataIsDoneInfo _dataIsDoneInfo;
   List<SelectSteps> _selectSteps;
   SelectSteps selectStep;
-  bool isAutoSave;
 
   DataIsDoneRequireAddition _dataIsDoneRequireAddition;
   DataIsResentInfo _dataIsResentInfo;
@@ -41,15 +40,50 @@ class ActionRepository with ChangeNotifier {
 
   Future<int> getIsResolve(
       Conditions conditions, int idServiceRecord, bool isReject, {bool isOnEventBus = false}) async {
-    if (conditions.type.toLowerCase() == "Resolve".toLowerCase()) {
+    if (conditions.type.toLowerCase() == "Resolve".toLowerCase() && isReject) {
       IsResolveRequest isResolveRequest = IsResolveRequest();
       isResolveRequest.idServiceRecord = idServiceRecord;
       isResolveRequest.nextSchemaConditionId = conditions.nextSchemaConditionId;
 
-      var responseRecordIsResolve = await ApiCaller.instance
-          .postFormData(AppUrl.recordIsResolve, isResolveRequest.getParams());
-      RecordIsResolveResponse recordIsResolveResponse =
-          RecordIsResolveResponse.fromJson(responseRecordIsResolve);
+      var responseRecordIsResolve = await ApiCaller.instance.postFormData(AppUrl.registerIsSolveAgain, isResolveRequest.getParams());
+      RecordIsResolveResponse recordIsResolveResponse = RecordIsResolveResponse.fromJson(responseRecordIsResolve);
+      if (recordIsResolveResponse.status == 1) {
+        idStepNext = recordIsResolveResponse.dataIsResolve.resolve.idStep;
+
+        DataIsResolve dataIsResolve = recordIsResolveResponse.dataIsResolve;
+
+        IsDoneInfoRequest infoRequest = IsDoneInfoRequest();
+        infoRequest.id = idServiceRecord;
+        infoRequest.idSchemaCondition = dataIsResolve.resolve.iDSchemaCondition;
+        infoRequest.idStep = dataIsResolve.resolve.idStep;
+
+        idSchemaConditionResolve = dataIsResolve.resolve.iDSchemaCondition;
+
+        var response = await ApiCaller.instance.postFormData(
+            AppUrl.recordIsDoneInfo, infoRequest.getParams(),
+            isLoading: true);
+        IsDoneInfoResponse isDoneInfoResponse =
+        IsDoneInfoResponse.fromJson(response);
+        if (isDoneInfoResponse.status == 1) {
+          isResolve = true;
+          _dataIsDoneInfo = isDoneInfoResponse.data;
+          idStepNext = isDoneInfoResponse.data.iDServiceRecordWfStep;
+          notifyListeners();
+        } else {
+          ToastMessage.show(isDoneInfoResponse.messages, ToastStyle.error);
+        }
+
+        return isDoneInfoResponse.status;
+      } else {
+        ToastMessage.show(recordIsResolveResponse.messages, ToastStyle.error);
+      }
+    } else if (conditions.type.toLowerCase() == "Resolve".toLowerCase()) {
+      IsResolveRequest isResolveRequest = IsResolveRequest();
+      isResolveRequest.idServiceRecord = idServiceRecord;
+      isResolveRequest.nextSchemaConditionId = conditions.nextSchemaConditionId;
+
+      var responseRecordIsResolve = await ApiCaller.instance.postFormData(AppUrl.recordIsResolve, isResolveRequest.getParams());
+      RecordIsResolveResponse recordIsResolveResponse = RecordIsResolveResponse.fromJson(responseRecordIsResolve);
       if (recordIsResolveResponse.status == 1) {
         DataIsResolve dataIsResolve = recordIsResolveResponse.dataIsResolve;
 
@@ -168,6 +202,7 @@ class ActionRepository with ChangeNotifier {
             iDGroupPdfForm: response.data.iDGroup.toString(),
           ));
       if (status == 1) {
+        Navigator.pop(context);
         return status;
       }
     } else {

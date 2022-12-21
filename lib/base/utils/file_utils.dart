@@ -10,6 +10,7 @@ import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:workflow_manager/base/extension/string.dart';
 import 'package:workflow_manager/base/ui/bottom_sheet_dialog.dart';
@@ -232,7 +233,8 @@ class FileUtils {
   Future<UploadModel> uploadFileFromSdcard(BuildContext context,
       {FileType fileType,
         List<String> allowExtentions,
-        List<String> notAllowFileName}) async {
+        List<String> notAllowFileName,
+        bool convertToPDF = false}) async {
     try {
       UploadModel uploadModel;
       if (fileType == null && Platform.isIOS) {
@@ -266,7 +268,9 @@ class FileUtils {
       }
       return await uploadFile(fileType ?? FileType.any,
           allowExtentions: allowExtentions,
-          notAllowFileNames: notAllowFileName);
+          notAllowFileNames: notAllowFileName,
+        convertToPDF: convertToPDF
+      );
     } on Exception {
       var device = await DeviceInfoPlugin().androidInfo;
       if (["10", "11"].contains(device.version.release))
@@ -276,7 +280,11 @@ class FileUtils {
   }
 
   Future<UploadModel> uploadFile(FileType type,
-      {List<String> allowExtentions, List<String> notAllowFileNames}) async {
+      {
+        List<String> allowExtentions,
+        List<String> notAllowFileNames,
+        bool convertToPDF = false
+      }) async {
     FilePickerResult result;
     if (isNotNullOrEmpty(allowExtentions)) {
       result = await FilePicker.platform
@@ -289,23 +297,25 @@ class FileUtils {
     if (notAllowFileNames?.contains(result.names[0]) == true) {
       return UploadModel(uploadStatus: UploadStatus.file_name_existed);
     }
-    String root =
-    await SharedPreferencesClass.get(SharedPreferencesClass.ROOT_KEY);
+    String root = await SharedPreferencesClass.get(SharedPreferencesClass.ROOT_KEY);
     var pathFile = result.files[0].path;
+
     print("XXuploadFile pathFile = ${pathFile}");
     var params = {
-      "FileDocument": await MultipartFile.fromFile(pathFile,
-          filename: getFileName(pathFile)),
+      "FileDocument": await MultipartFile.fromFile(pathFile, filename: getFileName(pathFile)),
       'IsMobile': '1'
     };
-    var response =
-    await ApiCaller.instance.uploadFile("${root}uploader/upfile", params);
+    var response = await ApiCaller.instance.uploadFile("${root}uploader/upfile", params);
     UploadResponse uploadResponse = UploadResponse.fromJson(response);
     if (uploadResponse.status == 1) {
       if (uploadResponse.data.fileName.startsWith("/"))
         uploadResponse.data.fileName =
             uploadResponse.data.fileName.substring(1);
       uploadResponse.data.uploadStatus = UploadStatus.upload_success;
+      if (convertToPDF) {
+        var part = uploadResponse.data.filePath.split(".");
+        uploadResponse.data.filePath = "${part[0]}.pdf";
+      }
       uploadResponse.data.filePathRoot = pathFile;
       return uploadResponse.data;
     } else {
@@ -314,6 +324,7 @@ class FileUtils {
       return null;
     }
   }
+
 
   Future<UploadModel> uploadFileWithPath(String pathFile) async {
     String root =

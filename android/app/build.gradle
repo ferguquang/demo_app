@@ -31,7 +31,7 @@ android {
     signingConfigs {
         config {
             keyPassword '123456'
-            storeFile file('../keystore/evngenco2.jks')
+            storeFile file('../keystore/lione_hp.keystore')
             storePassword '123456'
             keyAlias 'keyAlias'
 

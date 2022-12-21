@@ -43,8 +43,8 @@ class RegisterCreateModel {
   String recordName;
   int priority;
   bool isEnableAttachSignFile;
-  bool isSignAttachFile;
-  bool isSignAttachFileRequired;
+  bool isSignAttachFile; //Check có show nút ký file đính kèm
+  bool isSignAttachFileRequired; //Check có bắt buộc file đính kèm không
   bool isParallelAssign = false;
   String describe;
   String code;

@@ -45,6 +45,8 @@ class SignalScreen extends StatefulWidget {
   String action; // endpoint API
   String isDoneInfoDATA;
 
+  bool isRegisterIsSign = false;
+
   SignalScreen(this.signalFile, this.idHoso, this.title,
       {this.signatures,
       this.signatureLocation,
@@ -52,6 +54,7 @@ class SignalScreen extends StatefulWidget {
       this.iDGroupPdfForm,
       this.action,
       this.isDoneInfoDATA,
+      this.isRegisterIsSign = false,
       this.isTypeRegister = true})
       : super(key: GlobalKey());
 
@@ -105,6 +108,8 @@ class SignalScreenState extends State<SignalScreen> {
   @override
   void initState() {
     super.initState();
+    _pdfRepository.isRegisterIsSign = widget.isRegisterIsSign;
+
     _currentPage = _pageController.initialPage;
     signalFile = widget.signalFile;
     openPdf();
@@ -262,15 +267,20 @@ class SignalScreenState extends State<SignalScreen> {
     if (status.isUndetermined) {
       await Permission.storage.request();
     }
-    String path =
-        await SharedPreferencesClass.get(SharedPreferencesClass.ROOT_KEY) +
-            signalFile.signPath;
+    String path = await SharedPreferencesClass.get(SharedPreferencesClass.ROOT_KEY) + signalFile.signPath;
+    String extension = signalFile.extension;
+    String idFile = signalFile.iD.toString() ?? "";
     localFile = await FileUtils.instance.downloadFileAndOpen(
-        signalFile.iD.toString() + signalFile.extension, path, context,
-        isOpenFile: false, isShowSuccess: false);
+      idFile + extension,
+      path,
+      context,
+      isOpenFile: false,
+      isShowSuccess: false
+    );
 
     if (localFile != null) {
       _pdfDocument = await PdfDocument.openFile(localFile);
+      print("object");
     } else {
       showErrorToast("Download $path error");
     }
@@ -443,7 +453,9 @@ class SignalScreenState extends State<SignalScreen> {
         SharedPreferencesClass.PASSWORD_SIGNAL);
     if (isNotNullOrEmpty(password)) {
       var isSuccess = await savePdf(password, widget.idHoso);
-      if (isSuccess) Navigator.pop(context);
+      if (isSuccess) {
+        Navigator.pop(context, isSuccess);
+      }
     } else {
       await showDialog(
         context: context,
@@ -526,6 +538,8 @@ class SignalScreenState extends State<SignalScreen> {
                       String paswordSignal = _passwordController.text;
                       SharedPreferencesClass.save(SharedPreferencesClass.PASSWORD_SIGNAL, paswordSignal);
                     }
+
+                    Navigator.of(context).pop();
                     var isSuccess = await savePdf(_passwordController.text, widget.idHoso);
                     if (isSuccess) {
                       Navigator.pop(context, widget.signatures != null ? isSuccess : null);
@@ -581,7 +595,23 @@ class SignalScreenState extends State<SignalScreen> {
     params["Password"] = password.toString();
     params["SignPageFixPos"] = signPageFixPos.toList().toString();
     params["IDGroupPdfForm"] = widget.iDGroupPdfForm;
-    if (isNotNullOrEmpty(widget.action)) {
+    if (widget.isRegisterIsSign ?? false) {
+      String path = widget.signalFile.signPath.toLowerCase();
+      path = path.replaceAll("/storage/files/", "");
+      params["PdfPath"] = path;
+      params["IDService"] = widget.idHoso;
+      var json = await ApiCaller.instance.postFormData(AppUrl.getQTTTSavePdfFormRegister, params);
+      BaseResponse response = BaseResponse.fromJson(json);
+      if (response.status == 1) {
+        ToastMessage.show(response.messages, ToastStyle.success);
+        // Navigator.pop(context);
+        // eventBus.fire(EventReloadDetailProcedure());
+        return true;
+      }
+
+      showErrorToast(response, defaultMessage: "Lưu chữ ký thất bại");
+      return false;
+    } else if (isNotNullOrEmpty(widget.action)) {
       params["IDServiceRecord"] = widget.idHoso;
       if (isNotNullOrEmpty(widget.paramsRegitster)) {
         params["PdfPath"] = widget.paramsRegitster["PdfPath"];

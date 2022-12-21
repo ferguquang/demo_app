@@ -1,5 +1,6 @@
 import 'package:workflow_manager/base/models/base_response.dart';
 import 'package:workflow_manager/procedures/models/response/field_table_list.dart';
+import 'package:workflow_manager/procedures/models/response/file_template.dart';
 import 'package:workflow_manager/procedures/models/response/group_infos.dart';
 import 'package:workflow_manager/procedures/models/response/single_field.dart';
 
@@ -38,7 +39,7 @@ class HistoryInfo {
   String progressTime;
   Progress progress;
 
-  // List<Null> attachedFiles;
+  List<FileTemplate> attachedFiles;
   // List<Null> fields;
   List<Field> singleFields;
   List<Field> tableFields;
@@ -49,6 +50,7 @@ class HistoryInfo {
   // RegisterInfo registerInfo;
   FieldTableList fieldTableList;
 
+
   HistoryInfo({
     this.stepName,
     this.executorName,
@@ -57,7 +59,8 @@ class HistoryInfo {
     this.statusProcess,
     this.progressTime,
     this.progress,
-    /* this.attachedFiles, this.fields,*/
+     this.attachedFiles,
+  // this.fields,
     this.singleFields,
     this.tableFields,
     this.groupInfos,
@@ -76,10 +79,10 @@ class HistoryInfo {
     progress = json['Progress'] != null
         ? new Progress.fromJson(json['Progress'])
         : null;
-    // if (json['AttachedFiles'] != null) {
-    //   attachedFiles = new List<Null>();
-    //   json['AttachedFiles'].forEach((v) { attachedFiles.add(new Null.fromJson(v)); });
-    // }
+    if (json['AttachedFiles'] != null) {
+      attachedFiles = new List<FileTemplate>();
+      json['AttachedFiles'].forEach((v) { attachedFiles.add(new FileTemplate.fromJson(v)); });
+    }
     // if (json['Fields'] != null) {
     //   fields = new List<Null>();
     //   json['Fields'].forEach((v) { fields.add(new Null.fromJson(v)); });
@@ -96,7 +99,7 @@ class HistoryInfo {
         tableFields.add(new Field.fromJson(v));
       });
     }
-    if (tableFields?.length > 0) {
+    if (tableFields.length > 0) {
       fieldTableList =
           FieldTableList.fromJson(json["FieldTableList"], tableFields);
       if (json['GroupInfos'] != null) {

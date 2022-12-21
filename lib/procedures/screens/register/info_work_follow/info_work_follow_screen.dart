@@ -283,18 +283,28 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
         _infoWorkFollowRepository.isHighPriority == true ? 1 : 0;
 
     // file name, path và IsSignFile_{Path} của file trình ký (nếu có) của file đính kèm khác
-    String sendFileName = "", sendFilePath = "", sendFilePathTrinhKy = "";
+    String sendFileName = "", sendFilePath = "", sendFilePathTrinhKy = "", sendDateRequireFile = "";
     bool isUpdate = widget.isUpdate == true;
     List<String> listFileName = [];
     List<String> listFilePath = [];
+    List<String> listSendDateRequireFile = [];
 //                List<String> listFileTrinhKy = [];
     List<String> listIDFileKeep = []; // danh sách file đã có
-    List<FileTemplate> attachFileModels =
-        _infoWorkFollowRepository.registerCreateModel.attachedFiles;
-    if (attachFileModels.length == 1) // ds file đính kèm khác chỉ có 1 file
-    {
+    List<FileTemplate> attachFileModels = _infoWorkFollowRepository.registerCreateModel.attachedFiles;
+    bool isSignAttachFileRequired = _infoWorkFollowRepository.registerCreateModel.isSignAttachFileRequired ?? false;
+    for (int i = 0; i < attachFileModels.length; i++) {
+      FileTemplate attachFile = attachFileModels[i];
+      if (isSignAttachFileRequired && !attachFile.isRequireFile) {
+        showErrorToast("File ${attachFile.fileName} cần được ký");
+        return;
+      }
+    }
+
+    // ds file đính kèm khác chỉ có 1 file
+    if (attachFileModels.length == 1) {
       sendFileName = attachFileModels[0].getFileName();
       sendFilePath = attachFileModels[0].path;
+      sendDateRequireFile = "${attachFileModels[0].iD}";
 
       // bỏ "/Storage/Files/" trong file path (nếu có)
       if (sendFilePath.contains("/Storage/Files/")) {
@@ -305,13 +315,15 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
       }
 
       // lưu file trinh ky - 1 file
-      if (_infoWorkFollowRepository
-                  .registerCreateModel.isEnableAttachSignFile ==
-              true &&
+      if (_infoWorkFollowRepository.registerCreateModel.isEnableAttachSignFile == true &&
           attachFileModels[0].isSignFile == true) {
         sendFilePathTrinhKy = "IsSignFile_" + sendFilePath;
         params[sendFilePathTrinhKy] = "1";
       }
+
+      int idFile = attachFileModels[0].iD;
+      params["IsRequiredSign_$idFile"] = _infoWorkFollowRepository.registerCreateModel.isSignAttachFileRequired ? "1" : "0"; // bắt buộc ký hay ko
+      params["RequiredFile_$idFile"] = attachFileModels[0].isRequireFile ? "1" : "0";
 
       if (widget.isUpdate) {
         if (attachFileModels[0].isKeep == true) {
@@ -333,15 +345,17 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
 
         listFileName.add("\"" + attachFileModels[i]?.getFileName() + "\"");
         listFilePath.add("\"" + filePath + "\"");
+        listSendDateRequireFile.add("\"" + "${attachFileModels[i]?.iD}" + "\"");
 
         // lưu file trinh ky - nhiều file
-        if (_infoWorkFollowRepository
-                    .registerCreateModel.isEnableAttachSignFile ==
-                true &&
-            attachFileModels[i].isSignFile == true) {
+        if (_infoWorkFollowRepository.registerCreateModel.isEnableAttachSignFile && attachFileModels[i].isSignFile) {
           sendFilePathTrinhKy = "IsSignFile_" + filePath;
           params[sendFilePathTrinhKy] = "1";
         }
+
+        int idFile = attachFileModels[i].iD;
+        params["IsRequiredSign_$idFile"] = _infoWorkFollowRepository.registerCreateModel.isSignAttachFileRequired ? "1" : "0"; // bắt buộc ký hay ko
+        params["RequiredFile_$idFile"] = attachFileModels[i].isRequireFile ? "1" : "0";
 
         if (isUpdate) {
           if (attachFileModels[i].isKeep == true) {
@@ -356,6 +370,10 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
       if (isNotNullOrEmpty(listFilePath)) {
         sendFilePath = "[" + listFilePath.join(", ") + "]";
       }
+      if (isNotNullOrEmpty(listSendDateRequireFile)) {
+        sendDateRequireFile = "[" + listSendDateRequireFile.join(", ") + "]";
+      }
+
       print("XsendFileName = ${sendFileName}");
       if (isUpdate) {
         String sendIDServiceInfoFile = "[" + listIDFileKeep.join(", ") + "]";
@@ -365,14 +383,15 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
     if (isUpdate && attachFileModels.length >= 1) {
       params["FileName"] = sendFileName;
       params["FilePath"] = sendFilePath;
+      params["DateRequiredFile"] = sendDateRequireFile;
     } else if (!isUpdate && attachFileModels.length >= 1) {
       params["FileName"] = sendFileName;
       params["FilePath"] = sendFilePath;
+      params["DateRequiredFile"] = sendDateRequireFile;
     }
 
     // lấy filename, path của d/s file template:
-    List<StepTemplateFile> fileTemplates =
-        _infoWorkFollowRepository.registerCreateModel.fileTemplates;
+    List<StepTemplateFile> fileTemplates = _infoWorkFollowRepository.registerCreateModel.fileTemplates;
     for (int i = 0; i < fileTemplates.length; i++) {
       String fileTemplateName =
           fileTemplates[i]?.uploadedFile?.uploadedFileName;
@@ -429,25 +448,19 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
     }
 
     // IDPosition và (DeptofIDPosition + ID Position) vd: DeptofIDPosition345
-    List<ListPositionDeptSelectedModel> listPositionDeptSelectedModels =
-        _assignWidget.getSelectedPositionAndDepts();
+    List<ListPositionDeptSelectedModel> listPositionDeptSelectedModels = _assignWidget.getSelectedPositionAndDepts();
     if (listPositionDeptSelectedModels == null)
       listPositionDeptSelectedModels = [];
     List<String> listIDPositionSelected = [];
     for (int i = 0; i < listPositionDeptSelectedModels.length; i++) {
-      Position positionSelected =
-          listPositionDeptSelectedModels[i].positionSelected;
+      Position positionSelected = listPositionDeptSelectedModels[i].positionSelected;
       listIDPositionSelected.add(positionSelected.iD.toString());
 
       List<String> deptToIDPosition = [];
-      for (int a = 0;
-          a < listPositionDeptSelectedModels[i].listDeptSelected.length;
-          a++) {
-        HandlerInfo deptSelected =
-            listPositionDeptSelectedModels[i].listDeptSelected[a];
+      for (int a = 0; a < listPositionDeptSelectedModels[i].listDeptSelected.length; a++) {
+        HandlerInfo deptSelected = listPositionDeptSelectedModels[i].listDeptSelected[a];
         deptToIDPosition.add(deptSelected.iD.toString());
-        params["DeptofIDPosition" + positionSelected.iD.toString()] =
-            deptToIDPosition.join(", ");
+        params["DeptofIDPosition" + positionSelected.iD.toString()] = deptToIDPosition.join(", ");
       }
     }
 
@@ -537,8 +550,7 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
       }
     }
 
-    List<Field> singleFields =
-        _infoWorkFollowRepository.registerCreateModel.singleFields;
+    List<Field> singleFields = _infoWorkFollowRepository.registerCreateModel.singleFields;
     for (int i = 0; i < singleFields.length; i++) // code chỉnh sửa
     {
       if (singleFields[i].type == "file" || singleFields[i].type == "fcfile") {
@@ -1289,8 +1301,7 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
                 ),
                 onTap: () async {
                   FocusScope.of(context).unfocus();
-                  var result =
-                      await FileUtils.instance.uploadFileFromSdcard(context);
+                  var result = await FileUtils.instance.uploadFileFromSdcard(context, convertToPDF: true);
                   if (result != null) {
                     if (registerCreateModel != null) {
                       _infoWorkFollowRepository.addAttachFile(result);
@@ -1334,8 +1345,7 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
                     ),
                   ),
                   Visibility(
-                    visible:
-                        registerCreateModel?.isEnableAttachSignFile == true,
+                    visible: registerCreateModel?.isEnableAttachSignFile == true,
                     child: InkWell(
                       onTap: () {
                         FocusScope.of(context).unfocus();
@@ -1356,14 +1366,39 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
                             margin: EdgeInsets.only(left: 8),
                             width: 25,
                             child: Checkbox(
-                              value: registerCreateModel
-                                      ?.attachedFiles[index].isSignFile ==
-                                  true,
+                              value: registerCreateModel?.attachedFiles[index].isSignFile == true,
                             ),
                           )
                         ],
                       ),
                     ),
+                  ),
+                  Visibility(
+                    visible: registerCreateModel.isSignAttachFile ?? false,
+                    child: InkWell(
+                      onTap: () async {
+                        FileTemplate signalFile = FileTemplate(
+                          iD: registerCreateModel?.attachedFiles[index]?.iD,
+                          name: registerCreateModel?.attachedFiles[index]?.getFileName() ?? "",
+                          path: "/Storage/Files/" + registerCreateModel?.attachedFiles[index]?.path,
+                          signPath: "/Storage/Files/" + registerCreateModel?.attachedFiles[index]?.path,
+                          extension: _getFileExtension(registerCreateModel?.attachedFiles[index]?.getFileName() ?? "")
+                        );
+
+                        bool isSuccess = await pushPage(context, SignalScreen(
+                          signalFile,
+                          widget.idService,
+                          "Ký ngay khi ký",
+                          isRegisterIsSign: true,
+                        ));
+
+                        registerCreateModel?.attachedFiles[index]?.isRequireFile = isSuccess;
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Text("Ký", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),),
+                      ),
+                    )
                   ),
                   InkWell(
                     child: Container(
@@ -1397,6 +1432,14 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
         color: getColor("#E7E7E7"),
       )
     ]);
+  }
+
+  String _getFileExtension(String fileName) {
+    try {
+      return "." + fileName.split('.').last;
+    } catch(e){
+      return null;
+    }
   }
 }
 

@@ -7,16 +7,23 @@ import 'package:workflow_manager/procedures/models/response/data_signature_list_
 
 class PdfRepository extends ChangeNotifier {
   DataSignatureList dataSignatureList;
+  bool isRegisterIsSign = false;
 
   Future<DataSignatureList> loadAllSignals(
-      int idServiceRecord, int idPdf) async {
-    Map<String, dynamic> params = Map();
-    params["IDServiceRecord"] = idServiceRecord;
-    params["IDServiceInfoFile"] = idPdf;
-    var json = await ApiCaller.instance
-        .postFormData(AppUrl.getQTTTRecordSignatures, params);
-    DataSignatureListResponse response =
-        DataSignatureListResponse.fromJson(json);
+      int idServiceRecord, int idPdf, ) async {
+    var json;
+    if (isRegisterIsSign) {
+      Map<String, dynamic> params = Map();
+      params["IDService"] = idServiceRecord;
+      json = await ApiCaller.instance.postFormData(AppUrl.getQTTTRegisterSignatures, params);
+    } else {
+      Map<String, dynamic> params = Map();
+      params["IDServiceRecord"] = idServiceRecord;
+      params["IDServiceInfoFile"] = idPdf;
+      json = await ApiCaller.instance.postFormData(AppUrl.getQTTTRecordSignatures, params);
+    }
+
+    DataSignatureListResponse response = DataSignatureListResponse.fromJson(json);
     if (response.status == 1) {
       dataSignatureList = response.data;
       notifyListeners();

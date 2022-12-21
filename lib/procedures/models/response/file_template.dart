@@ -20,11 +20,14 @@ class FileTemplate {
   String stepUploadName;
   UploadedFile uploadedFile;
   User uploader;
-  bool isSignFile;
+  bool isSignFile; // trình ký
   bool isSigned;
   bool isEnableSigned;
   List<Conditions> actions;
   bool isKeep = false;
+
+  bool isRequireFile = false; // đã đc ký hay chưa
+
   String getFileName(){
     return fileName??name;
   }
@@ -45,7 +48,11 @@ class FileTemplate {
       this.signPath,
       this.isSigned,
       this.isEnableSigned,
-      this.isSignFile});
+      this.isSignFile,
+
+        this.isRequireFile = false
+
+      });
 
   FileTemplate.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];

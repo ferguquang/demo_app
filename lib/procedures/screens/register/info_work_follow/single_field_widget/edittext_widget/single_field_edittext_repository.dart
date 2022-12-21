@@ -63,9 +63,10 @@ class SingleFieldEditTextRepository extends SingleFieldRepositoryBase {
 
   String replaceCode(String text, String code, String value) {
     String pattern = "(^|[\\+\\-\\*/\\s=])$code([\\+\\-\\*/\\s=]|\$)";
-    return text.replaceAllMapped(RegExp(pattern), (Match match) {
+    String replaceCode = text.replaceAllMapped(RegExp(pattern), (Match match) {
       return "${match.group(1)}$value${match.group(2)}";
     });
+    return replaceCode;
   }
 
   int calcNextField(List<String> colRowList, String value, int index,
@@ -76,19 +77,25 @@ class SingleFieldEditTextRepository extends SingleFieldRepositoryBase {
         String codeHienTai = fields[index].code;
         if (colRow.startsWith(codeHienTai + "=")) continue;
         List<String> cols = colRow.split(RegExp(r"[\+\-\*/\:\s=]+"));
-        for (int i = 0; i < cols.length; i++) {
-          cols[i] = cols[i].replaceAll("(", "").replaceAll(")", "");
-        }
 
-        if (cols.contains(codeHienTai)) {
-          colRow = replaceCode(colRow, codeHienTai,
-              fields[index].isMoney ? getCurrencyFormat(value) : value);
+        for (int i = 0; i < cols.length; i++) {
+          if (cols[i].contains(codeHienTai)) {
+            colRow = replaceCode(colRow, codeHienTai,
+                fields[index].isMoney ? getCurrencyFormat(value) : value);
+          }
         }
+        // if (cols.contains(codeHienTai)) {
+        //   colRow = replaceCode(colRow, codeHienTai,
+        //       fields[index].isMoney ? getCurrencyFormat(value) : value);
+        // }
 
         List<String> splitColRow = colRow.split("=");
         String resultCol = splitColRow[0].trim(); // valueResult: cột kết quả
         String recipe = splitColRow[1].trim(); // công thức tính toán đã có value hiện tại
         cols = recipe.split(RegExp(r"[\+\-\*/\:\s]+"));
+        // for (int i = 0; i < cols.length; i++) {
+        //   cols[i] = cols[i].replaceAll("(", "").replaceAll(")", "");
+        // }
         if (isNullOrEmpty(value)) {
           recipe = "";
         } else {

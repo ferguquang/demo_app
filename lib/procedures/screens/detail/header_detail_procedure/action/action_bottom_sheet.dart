@@ -47,7 +47,6 @@ class _ActionBottomSheetState extends State<ActionBottomSheet> {
   void initState() {
     super.initState();
     conditions = widget.conditions;
-    _repository.isAutoSave = widget.isAutoSave;
     getData(false);
   }
 
@@ -182,7 +181,12 @@ class _ActionBottomSheetState extends State<ActionBottomSheet> {
                   SaveButton(
                     onTap: () async {
                       if (widget.isReject) {
-                        int idNextStep = repository.dataIsResentInfo.iDServiceRecordWfStep;
+                        int idNextStep;
+                        if (_repository.dataIsResentInfo != null) {
+                          idNextStep = repository.dataIsResentInfo.iDServiceRecordWfStep;
+                        } else {
+                          idNextStep = repository.idStepNext;
+                        }
                         int status = await _repository.registerResentInfo(
                           context,
                           idNextStep,

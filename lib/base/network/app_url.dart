@@ -23,7 +23,8 @@ class AppUrl {
   // static const String baseURL = "https://api-gateway.lione.vn/api/";
   // static const String baseURL = "https://apiqtnb.evngenco2.vn:8091/api/";
   // static const String baseURL = "http://118.70.48.211:1681/api/";
-  static const String baseURL = "http://27.72.28.202:9110/api/";
+  static const String baseURL = "http://27.72.28.202:9110/api/"; // hải phòng
+  // static const String baseURL = "http://183.91.4.70:8081/api/"; // ban quản lý các dự án
   // static const String baseURL = "http://118.70.48.211:8021/api/"; // uat
   static const String oneSignalAppID = '93463f14-ade9-4705-aa0c-bf98b60d98c6';
 
@@ -57,6 +58,7 @@ class AppUrl {
 
   // action giải quyết
   static const String recordIsResolve = "record/IsResolve";
+  static const String registerIsSolveAgain = "Register/IsSolveAgain";
   static const String recordIsDoneInfo = "record/IsDoneInfo";
   static const String recordDoneInfo = "record/DoneInfo";
 
@@ -89,6 +91,7 @@ class AppUrl {
       "rating/SaveRateServiceRecord";
 
   static const String registerInfoStepHistory = "register/InfoStepHistory";
+  static const String recordInfoStepHistory = "Record/InfoStepHistory";
 
   static const String listHistory = "Task/GetListJobHistory";
   static const String listComment = "Task/GetDiscuss";
@@ -109,10 +112,15 @@ class AppUrl {
   static const String getQTTTRegisterChangeFeatured = "register/ChangeFeatured";
   static const String getQTTTRegisterUserInfo = "register/userInfo";
   static const String getQTTTRecordSaveData = "record/SaveData";
+
   static const String getQTTTRecordSignatures = "record/signatures";
+  static const String getQTTTRegisterSignatures = "Register/Signatures";
+
   static const String getQTTTSignatureCheckPasswordSignature =
       "Signature/CheckPasswordSignature";
   static const String getQTTTSignatureSavePDF = "Signature/savePDF";
+  static const String getQTTTSavePdfFormRegister = "Signature/SavePdfFormRegister";
+
   static const String getQTTTRatingServiceRateView = "rating/ServiceRateView";
   static const String getQTTTRecordIsDoneInfo = "record/IsDoneInfo";
   static const String getQTTTRegisterSavePdfForm = "register/SavePdfForm";
