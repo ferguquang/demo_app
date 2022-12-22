@@ -12,6 +12,7 @@ class PdfRepository extends ChangeNotifier {
   Future<DataSignatureList> loadAllSignals(
       int idServiceRecord, int idPdf, ) async {
     var json;
+    print("isRegisterIsSign: $isRegisterIsSign");
     if (isRegisterIsSign) {
       Map<String, dynamic> params = Map();
       params["IDService"] = idServiceRecord;
