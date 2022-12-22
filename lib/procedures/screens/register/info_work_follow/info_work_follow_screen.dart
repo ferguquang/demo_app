@@ -322,7 +322,9 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
       }
 
       int idFile = attachFileModels[0].iD;
-      params["IsRequiredSign_$idFile"] = _infoWorkFollowRepository.registerCreateModel.isSignAttachFileRequired ? "1" : "0"; // bắt buộc ký hay ko
+      if (_infoWorkFollowRepository.registerCreateModel.isSignAttachFileRequired != null) {
+        params["IsRequiredSign_$idFile"] = _infoWorkFollowRepository.registerCreateModel.isSignAttachFileRequired ? "1" : "0"; // bắt buộc ký hay ko
+      }
       params["RequiredFile_$idFile"] = attachFileModels[0].isRequireFile ? "1" : "0";
 
       if (widget.isUpdate) {
@@ -1302,7 +1304,7 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
                 onTap: () async {
                   FocusScope.of(context).unfocus();
                   var result = await FileUtils.instance.uploadFileFromSdcard(context, convertToPDF: true);
-                  if (result != null) {
+                  if (result != null && isNotNullOrEmpty(result.filePath)) {
                     if (registerCreateModel != null) {
                       _infoWorkFollowRepository.addAttachFile(result);
                     }

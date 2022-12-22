@@ -241,7 +241,9 @@ class FileUtils {
         if (isNotNullOrEmpty(allowExtentions)) {
           uploadModel = await uploadFile(FileType.custom,
               allowExtentions: allowExtentions,
-              notAllowFileNames: notAllowFileName);
+              notAllowFileNames: notAllowFileName,
+              convertToPDF: convertToPDF
+          );
           return uploadModel;
         } else {
           BottomSheetDialog bottomSheetDialog = BottomSheetDialog(
@@ -250,11 +252,15 @@ class FileUtils {
               if (item.key == 1) {
                 uploadModel = await uploadFile(FileType.image,
                     allowExtentions: allowExtentions,
-                    notAllowFileNames: notAllowFileName);
+                    notAllowFileNames: notAllowFileName,
+                    convertToPDF: convertToPDF
+                );
               } else {
                 uploadModel = await uploadFile(FileType.any,
                     allowExtentions: allowExtentions,
-                    notAllowFileNames: notAllowFileName);
+                    notAllowFileNames: notAllowFileName,
+                    convertToPDF: convertToPDF
+                );
               }
             },
           );

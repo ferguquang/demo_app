@@ -616,17 +616,17 @@ class SignalScreenState extends State<SignalScreen> {
       if (isNotNullOrEmpty(widget.paramsRegitster)) {
         params["PdfPath"] = widget.paramsRegitster["PdfPath"];
       }
+
       params["IsDoneInfoDATA"] = widget.isDoneInfoDATA;
-      var json = await ApiCaller.instance
-          .postFormData(widget.action, params);
+      var json = await ApiCaller.instance.postFormData(widget.action, params);
       BaseResponse response = BaseResponse.fromJson(json);
       if (response.status == 1) {
         ToastMessage.show(response.messages, ToastStyle.success);
-        String password = await SharedPreferencesClass.get(
-            SharedPreferencesClass.PASSWORD_SIGNAL);
-        if (!isNullOrEmpty(password)) {
-          Navigator.pop(context);
-        }
+        // String password = await SharedPreferencesClass.get(SharedPreferencesClass.PASSWORD_SIGNAL);
+        // if (!isNullOrEmpty(password)) {
+        //   Navigator.pop(context);
+        // }
+        Navigator.pop(context);
 
         eventBus.fire(EventReloadDetailProcedure());
         return true;
@@ -640,9 +640,9 @@ class SignalScreenState extends State<SignalScreen> {
             .filePath
             .replaceAll("/Storage/Files/", "");
       if (widget.paramsRegitster != null) params.addAll(widget.paramsRegitster);
+
       if (widget.isTypeRegister == true) {
-        var json = await ApiCaller.instance
-            .postFormData(AppUrl.getQTTTRegisterSavePdfForm, params);
+        var json = await ApiCaller.instance.postFormData(AppUrl.getQTTTRegisterSavePdfForm, params);
         DataRegisterSaveResponse response =
             DataRegisterSaveResponse.fromJson(json);
         if (response.status == 1) {

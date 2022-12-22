@@ -196,7 +196,7 @@ class OneSignalManager {
     String name = notificationInfo.message;
     String path = notificationInfo.path;
     String link = notificationInfo.link;
-    if (type == 377 || type == 378) {
+    if (type == 377 || type == 378 || type == 380) {
       return;
     }
     print(
@@ -210,7 +210,7 @@ class OneSignalManager {
       return;
     } else if (NotificationType.instance.isDetailJob(type)) {
       if (hasScreen((TaskDetailsScreen).toString())) {
-        eventBus.fire(NotiData(id: iDContent));
+        eventBus.fire(NotiData(id: iDContent,));
       } else
         pushPage(context, TaskDetailsScreen(iDContent, null));
       return;
