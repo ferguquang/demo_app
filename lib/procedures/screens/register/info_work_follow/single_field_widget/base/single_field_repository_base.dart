@@ -184,7 +184,7 @@ class SingleFieldRepositoryBase extends ChangeNotifier {
         } else {
           attributes.add(Attribute(
             key: target,
-            value: "0"
+            value: ""
           ));
         }
         for (int c = 0; c < attributes.length; c++) {

@@ -552,7 +552,9 @@ class SignalScreenState extends State<SignalScreen> {
                       SharedPreferencesClass.save(SharedPreferencesClass.PASSWORD_SIGNAL, paswordSignal);
                     }
 
-                    Navigator.of(context).pop();
+                    if (!widget.isRegisterIsSign) {
+                      Navigator.of(context).pop();
+                    }
                     var isSuccess = await savePdf(_passwordController.text, widget.idHoso);
                     if (isSuccess) {
                       Navigator.pop(context, widget.signatures != null ? isSuccess : null);
