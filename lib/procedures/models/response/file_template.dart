@@ -27,6 +27,7 @@ class FileTemplate {
   bool isKeep = false;
 
   bool isRequireFile = false; // đã đc ký hay chưa
+  bool isSignAttachFileRequired = false; // có bắt buộc ký hay ko
 
   String getFileName(){
     return fileName??name;
@@ -50,7 +51,8 @@ class FileTemplate {
       this.isEnableSigned,
       this.isSignFile,
 
-        this.isRequireFile = false
+        this.isRequireFile = false,
+        this.isSignAttachFileRequired
 
       });
 

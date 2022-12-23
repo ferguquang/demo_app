@@ -445,10 +445,23 @@ class SignalScreenState extends State<SignalScreen> {
   }
 
   donePress() async {
-    if (isNullOrEmpty(signalWidgets)) {
-      showErrorToast("Bạn chưa chọn chữ ký");
-      return;
+    if (widget.isRegisterIsSign) {
+      if (signalFile.isSignAttachFileRequired && !(signalFile.isRequireFile ?? false)) {
+        if (isNullOrEmpty(signalWidgets)) {
+          showErrorToast("Bạn chưa chọn chữ ký");
+          return;
+        }
+      } else {
+        Navigator.pop(context);
+        return;
+      }
+    } else {
+      if (isNullOrEmpty(signalWidgets)) {
+        showErrorToast("Bạn chưa chọn chữ ký");
+        return;
+      }
     }
+
     String password = await SharedPreferencesClass.get(
         SharedPreferencesClass.PASSWORD_SIGNAL);
     if (isNotNullOrEmpty(password)) {

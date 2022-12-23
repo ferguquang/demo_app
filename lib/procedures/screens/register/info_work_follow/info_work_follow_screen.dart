@@ -1384,7 +1384,9 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
                           name: registerCreateModel?.attachedFiles[index]?.getFileName() ?? "",
                           path: "/Storage/Files/" + registerCreateModel?.attachedFiles[index]?.path,
                           signPath: "/Storage/Files/" + registerCreateModel?.attachedFiles[index]?.path,
-                          extension: _getFileExtension(registerCreateModel?.attachedFiles[index]?.getFileName() ?? "")
+                          extension: _getFileExtension(registerCreateModel?.attachedFiles[index]?.getFileName() ?? ""),
+                          isRequireFile: registerCreateModel.attachedFiles[index].isRequireFile,
+                          isSignAttachFileRequired: registerCreateModel.isSignAttachFileRequired
                         );
 
                         bool isSuccess = await pushPage(context, SignalScreen(

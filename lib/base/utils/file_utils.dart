@@ -83,8 +83,7 @@ class FileUtils {
     if (isNeedToken)
       url += "${url.contains("?") ? "&" : "?"}token=" +
           await SharedPreferencesClass.getToken();
-    String path = await FileUtils.instance
-        .downloadFile(url, newName, isAutoDetectFileName: isAutoDetectFileName);
+    String path = await FileUtils.instance.downloadFile(url, newName, isAutoDetectFileName: isAutoDetectFileName);
     print("===========> ${path}");
 
     if (path.isNotNullOrEmpty) {
@@ -179,12 +178,11 @@ class FileUtils {
         DirectoryPath directoryPath = await getDirectory();
         downloadPath = directoryPath.RootSdcard;
       }
-      directory =
-          '${downloadPath}/FSIS${isNullOrEmpty(fileName) ? "" : "${fileName.startsWith("/") ? "" : "/"}$fileName"}';
+      directory = '$downloadPath/FSIS${isNullOrEmpty(fileName) ? "" : "${fileName.startsWith("/") ? "" : "/"}$fileName"}';
       var file = File(directory);
       if (await file.exists()) file.deleteSync();
-      if (!(await Directory('${downloadPath}/FSIS/').exists())) {
-        await Directory("${downloadPath}/FSIS/").create(recursive: true);
+      if (!(await Directory('$downloadPath/FSIS/').exists())) {
+        await Directory("$downloadPath/FSIS/").create(recursive: true);
       }
     } else {
       Directory osDirectory = await getApplicationDocumentsDirectory();
