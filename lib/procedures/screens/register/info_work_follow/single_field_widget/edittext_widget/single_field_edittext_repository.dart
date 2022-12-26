@@ -274,6 +274,18 @@ class SingleFieldEditTextRepository extends SingleFieldRepositoryBase {
       }
     }
     _oldValue = value;
+
+    List<LogicColumnUpdate> updateInfos = model.props.updateInfos;
+    // update cho các cột khác
+    if (isNotNullOrEmpty(updateInfos)) {
+      // vì chỉ có 1 cho nên sẽ lấy phần tử thứ 0:
+      LogicColumnUpdate updateInfo = updateInfos[0];
+      if (updateInfo.refValue == "sdn" ||
+          isNullOrEmpty(updateInfo.refValue)) {
+        calculateUpdateInfoInSingleField(updateInfo);
+      }
+    }
+
     return value;
   }
 

@@ -1,6 +1,6 @@
 class DataSelectDynamiclly {
   String total;
-  String value;
+  dynamic value;
 
   DataSelectDynamiclly.fromJson(Map<String, dynamic> json) {
     total = json['Total'];

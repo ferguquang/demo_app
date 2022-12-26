@@ -294,14 +294,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(bottom: 8),
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                "v${version} - copyright © ${AppStore.copyRight}",
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.only(bottom: 8),
+            //   alignment: Alignment.bottomCenter,
+            //   child: Text(
+            //     "v${version} - copyright © ${AppStore.copyRight}",
+            //     style: TextStyle(fontSize: 12),
+            //   ),
+            // ),
           ],
         ),
       ),

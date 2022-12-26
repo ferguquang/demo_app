@@ -248,10 +248,9 @@ class SingleFieldRepositoryBase extends ChangeNotifier {
     List<int> indexs = [];
     if (isNotNullOrEmpty(link)) {
       var response = await ApiCaller.instance.postFormData(link, params);
-      DataSelectDynamicllyResponse dataSelectDynamicllyResponse =
-          DataSelectDynamicllyResponse.fromJson(response);
+      DataSelectDynamicllyResponse dataSelectDynamicllyResponse = DataSelectDynamicllyResponse.fromJson(response);
       if (dataSelectDynamicllyResponse.isSuccess()) {
-        String valueResponse = dataSelectDynamicllyResponse.data.value;
+        dynamic valueResponse = dataSelectDynamicllyResponse.data.value;
         List<String> stringValue = (jsonDecode(valueResponse) as List<dynamic>)
             .map((e) => e.toString())
             .toList();
