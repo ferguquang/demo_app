@@ -130,179 +130,184 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthRepository>(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(left: 32, right: 32),
-                child: ListView(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 100),
-                      child: SizedBox(
-                        width: 140,
-                        height: 140,
-                        // child: SVGImage(svgName: "logo_app"),
-                        child: Image.asset('assets/icons/icon_app_hp.png'),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32),
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(top: 100),
+                        child: SizedBox(
+                          width: 140,
+                          height: 140,
+                          // child: SVGImage(svgName: "logo_app"),
+                          // child: Image.asset('assets/icons/icon_app_hp.png'),
+                        ),
                       ),
-                    ),
-                    Text(
-                      // "Hệ thống quy trình nội bộ",
-                      "CDS cho doanh nghiệp",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: getColor("#2c56a6"),
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold
+                      Text(
+                        // "Hệ thống quy trình nội bộ",
+                        "Tự động hóa doanh nghiệp",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: getColor("#2c56a6"),
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: TextField(
-                        focusNode: userNameFocusNode,
-                        controller: nameController,
-                        onSubmitted: (value) {
-                          _eventLogin(auth);
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Tên tài khoản',
-                          enabledBorder: new UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Palette.borderEditText.toColor())),
-                          focusedBorder: new UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue)),
-                          prefixIcon: Padding(
-                            padding: EdgeInsets.only(right: 8),
-                            child: SVGImage(
-                              svgName: "ic_user",
+                      Container(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: TextField(
+                          focusNode: userNameFocusNode,
+                          controller: nameController,
+                          onSubmitted: (value) {
+                            _eventLogin(auth);
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Tên tài khoản',
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Palette.borderEditText.toColor())),
+                            focusedBorder: new UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue)),
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.only(right: 8),
+                              child: SVGImage(
+                                svgName: "ic_user",
+                              ),
                             ),
-                          ),
-                          prefixIconConstraints: BoxConstraints(
-                            minWidth: 24,
-                            minHeight: 24,
+                            prefixIconConstraints: BoxConstraints(
+                              minWidth: 24,
+                              minHeight: 24,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: TextField(
-                        controller: passwordController,
-                        onSubmitted: (value) {
-                          _eventLogin(auth);
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Mật khẩu',
-                          enabledBorder: new UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Palette.borderEditText.toColor())),
-                          focusedBorder: new UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue)),
-                          prefixIcon: Padding(
-                            padding: EdgeInsets.only(right: 8),
-                            child: SVGImage(
-                              svgName: "ic_pass",
+                      Container(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: TextField(
+                          controller: passwordController,
+                          onSubmitted: (value) {
+                            _eventLogin(auth);
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Mật khẩu',
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Palette.borderEditText.toColor())),
+                            focusedBorder: new UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue)),
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.only(right: 8),
+                              child: SVGImage(
+                                svgName: "ic_pass",
+                              ),
+                            ),
+                            prefixIconConstraints: BoxConstraints(
+                              minWidth: 24,
+                              minHeight: 24,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.remove_red_eye_outlined,
+                                color: this._showPassword
+                                    ? Colors.blue
+                                    : Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() =>
+                                    this._showPassword = !this._showPassword);
+                              },
                             ),
                           ),
-                          prefixIconConstraints: BoxConstraints(
-                            minWidth: 24,
-                            minHeight: 24,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              Icons.remove_red_eye_outlined,
-                              color: this._showPassword
-                                  ? Colors.blue
-                                  : Colors.grey,
+                          obscureText: !this._showPassword,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 32),
+                        width: double.infinity,
+                        child: ButtonTheme(
+                          height: 50,
+                          child: FlatButton(
+                            color: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            textColor: Colors.white,
+                            child: Text(
+                              'Đăng nhập'.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                             onPressed: () {
-                              setState(() =>
-                                  this._showPassword = !this._showPassword);
+                              _eventLogin(auth);
                             },
                           ),
                         ),
-                        obscureText: !this._showPassword,
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 32),
-                      width: double.infinity,
-                      child: ButtonTheme(
-                        height: 50,
-                        child: FlatButton(
-                          color: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          textColor: Colors.white,
-                          child: Text(
-                            'Đăng nhập'.toUpperCase(),
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                          onPressed: () {
-                            _eventLogin(auth);
-                          },
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        isCloudApi = !isCloudApi;
-                        SharedPreferencesClass.save(
-                            SharedPreferencesClass.IS_CLOUD_API, isCloudApi);
-                        setState(() {});
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: double.infinity,
-                        padding: EdgeInsets.only(top: 16, bottom: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 20,
-                              width: 20,
-                              margin: EdgeInsets.only(right: 16),
-                              child: Checkbox(
-                                value: isCloudApi,
-                              ),
-                            ),
-                            Text("Phiên bản cloud")
-                          ],
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: isHasBiometric,
-                      child: InkWell(
-                        child: Container(
-                            margin: EdgeInsets.only(top: 4),
-                            width: 44,
-                            height: 44,
-                            child: Image(
-                              image: AssetImage(iconBiometrics),
-                            )),
-                        onTap: () {
-                          _authenticateBiometrics(auth);
-                        },
-                      ),
-                    )
-                  ],
+                      // InkWell(
+                      //   onTap: () {
+                      //     isCloudApi = !isCloudApi;
+                      //     SharedPreferencesClass.save(
+                      //         SharedPreferencesClass.IS_CLOUD_API, isCloudApi);
+                      //     setState(() {});
+                      //   },
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     width: double.infinity,
+                      //     padding: EdgeInsets.only(top: 16, bottom: 16),
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Container(
+                      //           height: 20,
+                      //           width: 20,
+                      //           margin: EdgeInsets.only(right: 16),
+                      //           child: Checkbox(
+                      //             value: isCloudApi,
+                      //           ),
+                      //         ),
+                      //         Text("Phiên bản cloud")
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      // Visibility(
+                      //   visible: isHasBiometric,
+                      //   child: InkWell(
+                      //     child: Container(
+                      //         margin: EdgeInsets.only(top: 4),
+                      //         width: 44,
+                      //         height: 44,
+                      //         child: Image(
+                      //           image: AssetImage(iconBiometrics),
+                      //         )),
+                      //     onTap: () {
+                      //       _authenticateBiometrics(auth);
+                      //     },
+                      //   ),
+                      // )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            // Container(
-            //   padding: EdgeInsets.only(bottom: 8),
-            //   alignment: Alignment.bottomCenter,
-            //   child: Text(
-            //     "v${version} - copyright © ${AppStore.copyRight}",
-            //     style: TextStyle(fontSize: 12),
-            //   ),
-            // ),
-          ],
+              // Container(
+              //   padding: EdgeInsets.only(bottom: 8),
+              //   alignment: Alignment.bottomCenter,
+              //   child: Text(
+              //     "v${version} - copyright © ${AppStore.copyRight}",
+              //     style: TextStyle(fontSize: 12),
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );
