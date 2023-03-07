@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:workflow_manager/base/ui/circle_network_image.dart';
+import 'package:workflow_manager/base/ui/date_range_widget.dart';
 import 'package:workflow_manager/base/ui/svg_image.dart';
 import 'package:workflow_manager/base/utils/base_sharepreference.dart';
+import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/manager/models/events/update_image_event.dart';
 import 'package:workflow_manager/workflow/models/response/login_response.dart';
 
@@ -69,12 +71,17 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
               ),
             ),
-            Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Text(
-                  "Xin chào",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                )),
+            GestureDetector(
+              onTap: () {
+                DateRangeWidget.showDateRangeWidget(context);
+              },
+              child: Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text(
+                    "Xin chào",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  )),
+            ),
             Padding(
                 padding: EdgeInsets.only(left: 16,top: 8, right: 16),
                 child: Text(

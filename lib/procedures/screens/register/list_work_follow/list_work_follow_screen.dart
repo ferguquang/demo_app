@@ -16,6 +16,7 @@ import 'package:workflow_manager/procedures/screens/register/display_row_text_wi
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/info_work_follow_screen.dart';
 import 'package:workflow_manager/procedures/screens/register/list_work_follow/list_work_follow_repository.dart';
 import 'package:workflow_manager/procedures/screens/register/list_work_follow/list_work_follow_screen.dart';
+import 'package:workflow_manager/procedures/screens/register/list_work_follow/select_file_type/select_file_type_bottomsheet.dart';
 import 'package:workflow_manager/procedures/screens/register/step_widget.dart';
 import 'package:workflow_manager/procedures/models/params/list_work_follow_request.dart';
 import 'package:workflow_manager/procedures/models/response/RegisterServiceResponse.dart';
@@ -124,6 +125,21 @@ class _ListWorkFollowScreenState extends State<ListWorkFollowScreen>
                           ),
                           Expanded(
                             child: Container(),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.logout),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return Wrap(
+                                    children: [
+                                      SelectFileTypeBottomsheet()
+                                    ],
+                                  );
+                                }
+                              );
+                            }
                           ),
                           IconButton(
                             icon: RotatedBox(

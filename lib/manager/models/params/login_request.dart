@@ -14,7 +14,7 @@ class LoginRequest {
     if (password.isNotNullOrEmpty) {
       params["Password"] = password;
     }
-    params["IsCloudAPI"] = isCloudApi ? 1 : 0;
+    // params["IsCloudAPI"] = isCloudApi ? 1 : 0;
     return params;
   }
 }

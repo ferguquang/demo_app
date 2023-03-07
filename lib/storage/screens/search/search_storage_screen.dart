@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow_manager/base/ui/back_icon_button.dart';
+import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/storage/repository/search_storage_model.dart';
 import 'package:workflow_manager/storage/screens/tabs/main_tab_storage_screen.dart';
 import 'package:workflow_manager/base/utils/palette.dart';
 import 'package:workflow_manager/base/extension/string.dart';
+import 'advanced/search_storage_advance_screen.dart';
 import 'search_storage_repository.dart';
 
 class SearchStorageScreen extends StatefulWidget {
@@ -68,35 +70,61 @@ class SearchStorageState extends State<SearchStorageScreen> {
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: ListView.builder(
-                  itemCount: auth.listModel?.length ?? 0,
-                  // ignore: missing_return
-                  itemBuilder: (context, index) {
-                    SearchStorageModel item = auth?.listModel[index];
-                    switch (item.type) {
-                      case SearchStorageRepository.FILE:
-                      case SearchStorageRepository.TIME:
-                      case SearchStorageRepository.DOC:
-                        return _imageBuilderWidget(item, index);
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: auth.listModel?.length ?? 0,
+                        // ignore: missing_return
+                        itemBuilder: (context, index) {
+                          SearchStorageModel item = auth?.listModel[index];
+                          switch (item.type) {
+                            case SearchStorageRepository.FILE:
+                            case SearchStorageRepository.TIME:
+                            case SearchStorageRepository.DOC:
+                              return _imageBuilderWidget(item, index);
 
-                      case SearchStorageRepository.TITLE:
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                            case SearchStorageRepository.TITLE:
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.text,
+                                    style:
+                                        TextStyle(color: Colors.black, fontSize: 16),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 8),
+                                    height: 0.5,
+                                    color: Colors.grey,
+                                  ),
+                                ],
+                              );
+                          }
+                        },
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        pushPage(context, SearchStorageAdvanceScreen());
+                      },
+                      child: Container(
+                        height: 60,
+                        color: Colors.amber,
+                        alignment: Alignment.center,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              item.text,
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 16),
+                              "Tìm kiếm nâng cao"
                             ),
-                            Container(
-                              margin: EdgeInsets.only(top: 8),
-                              height: 0.5,
-                              color: Colors.grey,
-                            ),
+                            Icon(Icons.image_search_rounded)
                           ],
-                        );
-                    }
-                  },
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
