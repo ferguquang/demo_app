@@ -20,7 +20,7 @@
     <!--    <uses-permission android:name="vn.com.fsivietnam.docpro.docpro.READ_DATABASE" />-->
 
     <application
-        android:label="CDS cho doanh nghiệp"
+        android:label="Phần mềm chuyển đổi số doanh nghiệp"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
         android:networkSecurityConfig="@xml/network_security_config"

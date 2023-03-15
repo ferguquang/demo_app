@@ -31,7 +31,14 @@ class _SelectFileTypeBottomsheetState extends State<SelectFileTypeBottomsheet> {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
+                  String type = selectFileModels[index].fileType;
+                  selectFileModels.forEach((element) {
+                    element.isSelected = type == element.fileType;
+                  });
 
+                  setState(() {
+
+                  });
                 },
                 child: _itemWidget(model: selectFileModels[index]),
               );

@@ -64,6 +64,8 @@ android {
             shrinkResources false
         }
     }
+
+    ndkVersion "22.1.7171670"
 }
 
 flutter {

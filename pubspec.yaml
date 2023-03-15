@@ -117,9 +117,16 @@ dependencies:
 
   syncfusion_flutter_datepicker: ^18.4.49-beta
 
+  flutter_launcher_icons: ^0.8.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/playstore-icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
