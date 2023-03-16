@@ -500,6 +500,14 @@ class AppUrl {
   // -------------------- Quản lý tài liệu - storage -----------------------//
   // Storage
   static const String storageIndex = "StgFile/Index";
+  // update tìm kiếm nâng cao
+  static const String storageSearch = "StgFile/Search";
+  static const String getListRecordType = "StgFile/GetListRecordType";
+  static const String getRecordFieldSettingsByIDType = "StgFile/GetRecordFieldSettingsByIDType";
+  static const String getListDocType = "StgFile/GetListDocType";
+  static const String getStgDocFieldSettingsByIDType = "StgFile/GetStgDocFieldSettingsByIDType";
+  static const String getListCategoryType = "StgFile/GetListCategoryType";
+  static const String getCategoryTypeByID = "StgFile/GetCategoryTypeByID";
 
   static String checkDownloadFile({bool isShared}) {
     var type = AppStore.currentBottomViewTypeStorage;
