@@ -52,10 +52,9 @@ class ApiCaller {
       String token = await SharedPreferencesClass.getToken();
       var customHeaders = {
         'content-type': 'application/json',
-        'Authorization': token
+        // 'Authorization': token
       };
-      String baseUrl = await SharedPreferencesClass.get(
-          SharedPreferencesClass.BASE_URL_REMOTE);
+      String baseUrl = await SharedPreferencesClass.get(SharedPreferencesClass.BASE_URL_REMOTE);
       print("XbaseUrl = ${baseUrl}");
       if (isNotNullOrEmpty(baseUrl)) {
         options.baseUrl = baseUrl;
@@ -82,6 +81,9 @@ class ApiCaller {
 
   Future<dynamic> get(String path,
       {Map<String, dynamic> params, bool isLoading = true}) async {
+    if (params == null) {
+      params = Map();
+    }
     params["Token"] = await SharedPreferencesClass.getToken();
     printParams(params, path);
     if (isLoading) {
@@ -128,6 +130,9 @@ class ApiCaller {
   Future<dynamic> post(String path, Map<String, dynamic> params,
       {bool isLoading = true}) async {
     String token = await SharedPreferencesClass.getToken();
+    if (params == null) {
+      params = Map();
+    }
     params["Token"] = token;
     printParams(params, path);
 
@@ -154,6 +159,9 @@ class ApiCaller {
       {bool isLoading: true}) async {
     showLoading();
     var responseJson;
+    if (params == null) {
+      params = Map();
+    }
     params["Token"] = await SharedPreferencesClass.getToken();
     printParams(params, path);
     try {
@@ -174,6 +182,10 @@ class ApiCaller {
     // if (path.contains("report/wf")) {
     // params["Token"] = "tGYk62qV86UJC15j8uvJe0oljziEgNbm/WvDu4E9hSUB\$a\$n\$G";
     // } else {
+
+    if (params == null) {
+      params = Map();
+    }
     if (isNeedAddToken)
       params["Token"] = await SharedPreferencesClass.getToken();
     // }

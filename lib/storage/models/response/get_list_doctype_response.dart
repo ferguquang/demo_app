@@ -1,53 +1,57 @@
 import 'package:workflow_manager/base/models/base_response.dart';
 
-class GetListRecordTypeResponse extends BaseResponse {
-  DataListRecordType data;
+class GetListDocTypeResponse extends BaseResponse {
+  Data data;
 
-  GetListRecordTypeResponse.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
-    data = json['Data'] != null ? new DataListRecordType.fromJson(json['Data']) : null;
+  GetListDocTypeResponse.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+    data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
   }
 }
 
-class DataListRecordType {
-  List<RecordTypes> recordTypes;
+class Data {
+  List<StgDocTypes> stgDocTypes;
 
-  DataListRecordType({this.recordTypes});
+  Data({this.stgDocTypes});
 
-  DataListRecordType.fromJson(Map<String, dynamic> json) {
-    if (json['RecordTypes'] != null) {
-      recordTypes = <RecordTypes>[];
-      json['RecordTypes'].forEach((v) {
-        recordTypes.add(new RecordTypes.fromJson(v));
+  Data.fromJson(Map<String, dynamic> json) {
+    if (json['StgDocTypes'] != null) {
+      stgDocTypes = <StgDocTypes>[];
+      json['StgDocTypes'].forEach((v) {
+        stgDocTypes.add(new StgDocTypes.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.recordTypes != null) {
-      data['RecordTypes'] = this.recordTypes.map((v) => v.toJson()).toList();
+    if (this.stgDocTypes != null) {
+      data['StgDocTypes'] = this.stgDocTypes.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class RecordTypes {
+class StgDocTypes {
   int iD;
   int iDChannel;
   String name;
   String code;
   String describe;
-  String format;
   bool isDefault;
   int parent;
   String parents;
   int fileCount;
-  double pCTFileCount;
+  int pCTFileCount;
   int totalFileCount;
   int sizeSum;
-  double pCTSizeSum;
+  int pCTSizeSum;
   int totalSizeSum;
   String searchMeta;
+  int iDDept;
+  int iDWarehouse;
+  int iDPreservationPeriod;
+  int iDSecurityLevel;
+  int weight;
   bool keepConnectionAlive;
   // Null? connection;
   // Null? lastSQL;
@@ -58,13 +62,12 @@ class RecordTypes {
   int commandTimeout;
   int oneTimeCommandTimeout;
 
-  RecordTypes(
+  StgDocTypes(
       {this.iD,
         this.iDChannel,
         this.name,
         this.code,
         this.describe,
-        this.format,
         this.isDefault,
         this.parent,
         this.parents,
@@ -75,6 +78,11 @@ class RecordTypes {
         this.pCTSizeSum,
         this.totalSizeSum,
         this.searchMeta,
+        this.iDDept,
+        this.iDWarehouse,
+        this.iDPreservationPeriod,
+        this.iDSecurityLevel,
+        this.weight,
         this.keepConnectionAlive,
         // this.connection,
         // this.lastSQL,
@@ -85,13 +93,12 @@ class RecordTypes {
         this.commandTimeout,
         this.oneTimeCommandTimeout});
 
-  RecordTypes.fromJson(Map<String, dynamic> json) {
+  StgDocTypes.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     iDChannel = json['IDChannel'];
     name = json['Name'];
     code = json['Code'];
     describe = json['Describe'];
-    format = json['Format'];
     isDefault = json['IsDefault'];
     parent = json['Parent'];
     parents = json['Parents'];
@@ -102,6 +109,11 @@ class RecordTypes {
     pCTSizeSum = json['PCTSizeSum'];
     totalSizeSum = json['TotalSizeSum'];
     searchMeta = json['SearchMeta'];
+    iDDept = json['IDDept'];
+    iDWarehouse = json['IDWarehouse'];
+    iDPreservationPeriod = json['IDPreservationPeriod'];
+    iDSecurityLevel = json['IDSecurityLevel'];
+    weight = json['Weight'];
     keepConnectionAlive = json['KeepConnectionAlive'];
     // connection = json['Connection'];
     // lastSQL = json['LastSQL'];
@@ -120,7 +132,6 @@ class RecordTypes {
     data['Name'] = this.name;
     data['Code'] = this.code;
     data['Describe'] = this.describe;
-    data['Format'] = this.format;
     data['IsDefault'] = this.isDefault;
     data['Parent'] = this.parent;
     data['Parents'] = this.parents;
@@ -131,6 +142,11 @@ class RecordTypes {
     data['PCTSizeSum'] = this.pCTSizeSum;
     data['TotalSizeSum'] = this.totalSizeSum;
     data['SearchMeta'] = this.searchMeta;
+    data['IDDept'] = this.iDDept;
+    data['IDWarehouse'] = this.iDWarehouse;
+    data['IDPreservationPeriod'] = this.iDPreservationPeriod;
+    data['IDSecurityLevel'] = this.iDSecurityLevel;
+    data['Weight'] = this.weight;
     data['KeepConnectionAlive'] = this.keepConnectionAlive;
     // data['Connection'] = this.connection;
     // data['LastSQL'] = this.lastSQL;
@@ -140,25 +156,6 @@ class RecordTypes {
     data['EnableNamedParams'] = this.enableNamedParams;
     data['CommandTimeout'] = this.commandTimeout;
     data['OneTimeCommandTimeout'] = this.oneTimeCommandTimeout;
-    return data;
-  }
-}
-
-class Messages {
-  int code;
-  String text;
-
-  Messages({this.code, this.text});
-
-  Messages.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    text = json['text'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
-    data['text'] = this.text;
     return data;
   }
 }
