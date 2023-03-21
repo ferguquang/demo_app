@@ -31,13 +31,13 @@ android {
     signingConfigs {
         config {
             keyPassword '123456'
-            storeFile file('../keystore/lione_hp.keystore')
+            storeFile file('../keystore/sth.keystore')
             storePassword '123456'
             keyAlias 'keyAlias'
 
         }
     }
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -50,7 +50,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "vn.cetech.lionehaiphong"
+        applicationId "vn.cetech.sth"
         minSdkVersion  23
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()

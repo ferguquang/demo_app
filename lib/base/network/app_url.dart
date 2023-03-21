@@ -28,9 +28,9 @@ class AppUrl {
   // static const String baseURL = "http://183.91.4.70:8081/api/"; // ban quản lý các dự án
   // static const String baseURL = "http://118.70.48.211:8021/api/"; // uat
 
-  static const String baseURL = "http://118.70.48.211:8022/api/"; // VPS
+  // static const String baseURL = "http://118.70.48.211:8022/api/"; // VPS
   // static const String baseURL = "http://27.72.28.202:9218/api/"; // axa
-  // static const String baseURL = "http://118.70.48.211:8025/api/"; // STH
+  static const String baseURL = "http://118.70.48.211:8025/api/"; // STH
 
   static const String oneSignalAppID = '93463f14-ade9-4705-aa0c-bf98b60d98c6';
 
