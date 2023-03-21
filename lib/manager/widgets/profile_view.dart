@@ -73,7 +73,7 @@ class _ProfileViewState extends State<ProfileView> {
             ),
             GestureDetector(
               onTap: () {
-                DateRangeWidget.showDateRangeWidget(context);
+                // DateRangeWidget.showDateRangeWidget(context);
               },
               child: Padding(
                   padding: EdgeInsets.only(top: 16),
