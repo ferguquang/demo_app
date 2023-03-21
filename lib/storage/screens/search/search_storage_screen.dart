@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:workflow_manager/base/ui/back_icon_button.dart';
+import 'package:workflow_manager/base/ui/svg_image.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/storage/repository/search_storage_model.dart';
 import 'package:workflow_manager/storage/screens/tabs/main_tab_storage_screen.dart';
@@ -109,17 +111,24 @@ class SearchStorageState extends State<SearchStorageScreen> {
                         pushPage(context, SearchStorageAdvanceScreen());
                       },
                       child: Container(
-                        height: 60,
-                        color: Colors.amber,
+                        height: 40,
+                        // color: Colors.amber,
                         alignment: Alignment.center,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Tìm kiếm nâng cao"
+                              "Tìm kiếm nâng cao  ",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold
+                              ),
                             ),
-                            Icon(Icons.image_search_rounded)
+                            SvgPicture.asset(
+                              'assets/svgs/search_advance.svg',
+                              height: 24, width: 24,
+                            )
                           ],
                         ),
                       ),

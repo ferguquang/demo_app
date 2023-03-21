@@ -357,13 +357,13 @@ class _ManagerScreenState extends State<ManagerScreen>
                 ],
               ),
             ),
-            _buildItemMenu("ic_open_fsi", "Mở ứng dụng FSI",
-                callback: () => {
-                      if (Platform.isIOS)
-                        {_managerRepository.openIOSApp(context)}
-                      else if (Platform.isAndroid)
-                        {_managerRepository.openAndroidApp()}
-                    }),
+            // _buildItemMenu("ic_open_fsi", "Mở ứng dụng FSI",
+            //     callback: () => {
+            //           if (Platform.isIOS)
+            //             {_managerRepository.openIOSApp(context)}
+            //           else if (Platform.isAndroid)
+            //             {_managerRepository.openAndroidApp()}
+            //         }),
           ],
         ),
       ),

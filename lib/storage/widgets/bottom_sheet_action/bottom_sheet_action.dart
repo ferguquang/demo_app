@@ -17,6 +17,7 @@ import 'package:workflow_manager/storage/widgets/dialog/dialog_get_pass_word.dar
 import '../../utils/ImageUtils.dart';
 import '../dialog/dialog_delete_pass_word.dart';
 import '../dialog/dialog_set_pass_word.dart';
+import 'select_decentralization/select_decentralization_dialog.dart';
 
 class BottomSheetAction {
   BuildContext context;
@@ -145,6 +146,9 @@ class _BottomSheetActionState extends State<BottomSheetActionScreen> {
                         height: 0.5,
                         color: Colors.grey,
                       ),
+                      _iconAndTextWidget(9, true,
+                          Icons.download_sharp, 'Phân quyền'),
+
                       _iconAndTextWidget(0, widget.dataStorage.isShowDownload,
                           Icons.download_sharp, 'Tải xuống'),
                       _iconAndTextWidget(1, widget.dataStorage.isMove,
@@ -228,6 +232,10 @@ class _BottomSheetActionState extends State<BottomSheetActionScreen> {
                   onAccept: () {
                     _showDialogDelete();
                   }).showConfirmDialog();
+              break;
+            case 9:
+              CustomDialogWidget(widget.context, SelectDecentralizationDialog())
+                  .show();
               break;
           }
         },

@@ -13,6 +13,7 @@ import 'package:workflow_manager/storage/models/params/create_folder_request.dar
 import 'package:workflow_manager/storage/models/params/save_up_file_request.dart';
 import 'package:workflow_manager/storage/models/params/storage_index_request.dart';
 import 'package:workflow_manager/storage/models/response/create_folder_response.dart';
+import 'package:workflow_manager/storage/models/response/get_record_field_settings_by_id_type_response.dart';
 import 'package:workflow_manager/storage/models/response/save_up_file_response.dart';
 import 'package:workflow_manager/storage/repository/search_storage_model.dart';
 import 'package:workflow_manager/storage/screens/search/detail/detail_search_storage_screen.dart';
@@ -42,10 +43,16 @@ class ListStorageRepository extends ChangeNotifier {
   List<String> tpDateCreateList;
   List<String> iDDoctypeList;
 
+  bool isSearchAdvance = false;
+  SearchAdvanceParams searchAdvanceParams;
+
   Future<bool> getDocumentList() async {
     this.message = "";
     String url = "";
-    if (this.storageIndexRequest.idDoc != null &&
+    if (isSearchAdvance) {
+      url = AppUrl.storageSearch;
+      storageIndexRequest.searchAdvanceParams = searchAdvanceParams;
+    } else if (this.storageIndexRequest.idDoc != null &&
         this.storageIndexRequest.idDoc != 0) {
       url = AppUrl.getStorageIndex();
     } else {

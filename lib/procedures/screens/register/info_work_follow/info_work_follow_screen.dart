@@ -119,6 +119,10 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
     (_stepKey.currentState as StepWidgetState).backAll(data);
   }
 
+  backToQTTT(data) {
+    (_stepKey.currentState as StepWidgetState).backToQTTT(data);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -779,6 +783,8 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
                 paramsRegitster: params,
                 iDGroupPdfForm: response.data.iDGroup.toString(),
               ));
+
+          backAll(response.data);
         } else {
           backAll(response.data);
           showSuccessToast("Thêm mới hồ sơ thành công");

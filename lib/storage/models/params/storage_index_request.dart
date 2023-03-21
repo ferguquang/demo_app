@@ -1,4 +1,5 @@
 import 'package:workflow_manager/base/utils/common_function.dart';
+import 'package:workflow_manager/storage/models/response/get_record_field_settings_by_id_type_response.dart';
 
 class StorageIndexRequest {
   int take;
@@ -12,6 +13,8 @@ class StorageIndexRequest {
   String tpDateCreate;
   String iDDoctype;
   String accessSafePassword;
+
+  SearchAdvanceParams searchAdvanceParams;
 
   // Token(Đây là mã mà lúc đăng nhập server trả về cho app )
   // IDDoc (Đây là mã danh mục hoặc tài liệu muốn lấy theo)
@@ -57,6 +60,23 @@ class StorageIndexRequest {
       params["AccessSafePassword"] = accessSafePassword;
     }
 
+    if (searchAdvanceParams != null) {
+      params["isTypeSearchRecord"] = searchAdvanceParams.isTypeSearchRecord;
+      params["IDDoctype"] = searchAdvanceParams.idDoctype;
+      params["IDRecordType"] = searchAdvanceParams.idRecordType;
+      for (int i = 0; i < searchAdvanceParams.searchAdvanceList.length; i++) {
+        params["${searchAdvanceParams.searchAdvanceList[i].name}"] = "${searchAdvanceParams.searchAdvanceList[i].value}";
+      }
+    }
+
     return params;
   }
+}
+
+class SearchAdvanceParams {
+  int isTypeSearchRecord;
+  String idDoctype, idRecordType;
+  List<RecordFieldSettings> searchAdvanceList = [];
+
+  SearchAdvanceParams({this.isTypeSearchRecord, this.idDoctype, this.idRecordType, this.searchAdvanceList});
 }

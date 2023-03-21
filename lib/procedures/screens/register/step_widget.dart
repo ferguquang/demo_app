@@ -56,6 +56,13 @@ class StepWidgetState extends State<StepWidget> {
     }
   }
 
+  // trường hợp này cho phần ký, ko tích phần check lưu mật khẩu
+  backToQTTT(data) {
+    for (int i = 0; i < widget.currentStep; i++) {
+      Navigator.pop(context, data);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

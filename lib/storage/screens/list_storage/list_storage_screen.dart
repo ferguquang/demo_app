@@ -28,6 +28,8 @@ import 'package:workflow_manager/storage/models/events/change_tab_event.dart';
 import 'package:workflow_manager/storage/models/params/check_download_file_request.dart';
 import 'package:workflow_manager/storage/models/params/create_folder_request.dart';
 import 'package:workflow_manager/storage/models/params/save_up_file_request.dart';
+import 'package:workflow_manager/storage/models/params/storage_index_request.dart';
+import 'package:workflow_manager/storage/models/response/get_record_field_settings_by_id_type_response.dart';
 import 'package:workflow_manager/storage/screens/list_storage/list_storage_repository.dart';
 import 'package:workflow_manager/storage/screens/search/detail/list_storage_item.dart';
 import 'package:workflow_manager/storage/screens/search/search_storage_screen.dart';
@@ -60,12 +62,19 @@ class ListStorageScreen extends StatefulWidget {
 
   StreamSubscription changeTabSubs;
 
+  // search advance
+  bool isSearchAdvance = false;
+  SearchAdvanceParams searchAdvanceParams;
+
   ListStorageScreen({
     this.typeStorage,
     this.type,
     this.item,
     this.idFileForMove,
     this.passWordFileMove,
+    
+    this.searchAdvanceParams,
+    this.isSearchAdvance = false
   });
 
   @override
@@ -267,6 +276,9 @@ class ListStorageState extends State<ListStorageScreen> {
             item: event.item,
           ));
     });
+    _listStorageRepository.isSearchAdvance = widget.isSearchAdvance;
+
+
     this._listStorageRepository.type = this.widget.type;
     this._listStorageRepository.typeStorage = this.widget.typeStorage;
     idFileForMove = widget.idFileForMove;
