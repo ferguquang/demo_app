@@ -1,9 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:workflow_manager/base/network/api_caller.dart';
 import 'package:workflow_manager/base/network/app_url.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
+import 'package:workflow_manager/base/utils/file_utils.dart';
 import 'package:workflow_manager/main.dart';
 import 'package:workflow_manager/procedures/models/params/list_register_request.dart';
+import 'package:workflow_manager/procedures/models/response/export_file_response.dart';
 import 'package:workflow_manager/procedures/models/response/response_list_register.dart';
 import 'package:workflow_manager/procedures/models/response/search_procedure_model.dart';
 import 'package:workflow_manager/procedures/screens/register/list/list_register_screen.dart';
@@ -148,5 +151,30 @@ class ListRegisterRepository with ChangeNotifier {
         }
     }
     return "$sizeValue hồ sơ";
+  }
+
+  downloadFileFromUrl(int state, context) async {
+    var json = await ApiCaller.instance.postFormData(
+      AppUrl.registerExport,
+      {
+        "State": state
+      }
+    );
+    ExportResponse response = ExportResponse.fromJson(json);
+    if (response.isSuccess()) {
+      FileUtils.instance.downloadFileAndOpen(
+        response.data.fileName, response.data.path, context,
+      );
+    } else {
+      ToastMessage.show("${response.messages}", ToastStyle.error);
+    }
+  }
+
+  String getFileExtension(String fileName) {
+    try {
+      return "." + fileName.split('.').last;
+    } catch(e){
+      return null;
+    }
   }
 }

@@ -28,9 +28,9 @@ class AppUrl {
   // static const String baseURL = "http://183.91.4.70:8081/api/"; // ban quản lý các dự án
   // static const String baseURL = "http://118.70.48.211:8021/api/"; // uat
 
-  // static const String baseURL = "http://118.70.48.211:8022/api/"; // VPS
+  static const String baseURL = "http://118.70.48.211:8022/api/"; // VPS
   // static const String baseURL = "http://27.72.28.202:9218/api/"; // axa
-  static const String baseURL = "http://118.70.48.211:8025/api/"; // STH
+  // static const String baseURL = "http://118.70.48.211:8025/api/"; // STH
 
   static const String oneSignalAppID = '93463f14-ade9-4705-aa0c-bf98b60d98c6';
 
@@ -61,6 +61,9 @@ class AppUrl {
   static const String registerInfo = "register/Info";
   static const String recordInfo = "record/Info";
   static const String recordRating = "record/Rating";
+
+  static const String registerExport = "Register/Export";
+  static const String recordExport = "Record/Export";
 
   // action giải quyết
   static const String recordIsResolve = "record/IsResolve";
@@ -508,6 +511,7 @@ class AppUrl {
   static const String getStgDocFieldSettingsByIDType = "StgFile/GetStgDocFieldSettingsByIDType";
   static const String getListCategoryType = "StgFile/GetListCategoryType";
   static const String getCategoryTypeByID = "StgFile/GetCategoryTypeByID";
+  static const String getCategoryByIDCategoryType = "StgFile/GetCategoryByIDCategoryType";
 
   static String checkDownloadFile({bool isShared}) {
     var type = AppStore.currentBottomViewTypeStorage;

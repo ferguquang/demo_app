@@ -51,7 +51,7 @@ class ListStorageRepository extends ChangeNotifier {
     String url = "";
     if (isSearchAdvance) {
       url = AppUrl.storageSearch;
-      storageIndexRequest.searchAdvanceParams = searchAdvanceParams;
+      // storageIndexRequest.searchAdvanceParams = searchAdvanceParams;
     } else if (this.storageIndexRequest.idDoc != null &&
         this.storageIndexRequest.idDoc != 0) {
       url = AppUrl.getStorageIndex();
@@ -65,6 +65,7 @@ class ListStorageRepository extends ChangeNotifier {
       }
     }
     // print("===========> url: ${url}");
+    Map<String, dynamic> params = storageIndexRequest.getParams();
     final response = await apiCaller.postFormData(
         url, storageIndexRequest.getParams(),
         isLoading: storageIndexRequest.skip == 1);

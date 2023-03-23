@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:workflow_manager/base/models/base_response.dart';
 
+import 'get_category_by_idcategory_type_response.dart';
+
 class GetRecordFieldSettingsByIDTypeResponse extends BaseResponse  {
   Data data;
 
@@ -48,6 +50,7 @@ class RecordFieldSettings {
   String value = "";
   String textDisplay = ""; // áp dụng cho isCatalog = true
   TextEditingController textEditingController = TextEditingController();
+  List<Category> listCategorySelected = [];
 
   RecordFieldSettings(
       {this.iD,

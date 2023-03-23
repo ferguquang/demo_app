@@ -27,8 +27,13 @@ class ChildMultiTypeSearchRepository extends ChangeNotifier {
       fieldSettings = response.data.stgDocFieldSettings;
     }
 
-    // fieldSettings.addAll(fieldSettings);
-
+    fieldSettings.last.isMulti = true;
+    // fieldSettings.add(
+    //   fieldSettings.first
+    //     ..isCatalog = true
+    //     ..iDType = 1
+    //     ..isMulti = false
+    // );
     notifyListeners();
   }
 }

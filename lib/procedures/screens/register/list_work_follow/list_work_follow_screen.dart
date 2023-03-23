@@ -126,21 +126,7 @@ class _ListWorkFollowScreenState extends State<ListWorkFollowScreen>
                           Expanded(
                             child: Container(),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.logout),
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return Wrap(
-                                    children: [
-                                      SelectFileTypeBottomsheet()
-                                    ],
-                                  );
-                                }
-                              );
-                            }
-                          ),
+
                           IconButton(
                             icon: RotatedBox(
                               quarterTurns:isShowSearch? 2:0,

@@ -71,6 +71,7 @@ class _SearchStorageAdvanceScreenState extends State<SearchStorageAdvanceScreen>
                     visible: repository.isExpandRecordType,
                     child: ListView.builder(
                       itemCount: repository.recordTypes.length,
+                      padding: EdgeInsets.zero,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {

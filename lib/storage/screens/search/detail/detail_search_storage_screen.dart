@@ -37,12 +37,16 @@ class DetailSearchStorageScreen extends StatefulWidget {
 
   StorageBottomTabType type;
 
+  bool isSearchAdvance = false;
+
   DetailSearchStorageScreen(
-      this.request,
-      this.listCheck,
-      this.docChildItem,
-      this.typeStorage,
-      this.type); // ẩn hiện floatingbutton = 1, selected = 2, move = 3
+    this.request,
+    this.listCheck,
+    this.docChildItem,
+    this.typeStorage,
+    this.type,
+    {this.isSearchAdvance = false}
+  ); // ẩn hiện floatingbutton = 1, selected = 2, move = 3
 
   // DetailSearchStorageScreen(this.image, this.name, this.request);
 
@@ -88,6 +92,7 @@ class DetailSearchStorageState extends State<DetailSearchStorageScreen>
     searchController.text = widget.request.term;
     listStorageRepository = ListStorageRepository();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      listStorageRepository.isSearchAdvance = widget.isSearchAdvance;
       _getDocumentList();
       _listenerEventBus();
     });
@@ -153,26 +158,29 @@ class DetailSearchStorageState extends State<DetailSearchStorageScreen>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      widget.listCheck == null || widget.listCheck.length == 0
-                          ? const Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                "Không có bộ lọc nào",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            )
-                          : SizedBox(
-                              height: 50,
-                              child: ListView.builder(
-                                itemCount: widget.listCheck.length ?? 0,
-                                scrollDirection: Axis.horizontal,
-                                // ignore: missing_return
-                                itemBuilder: (context, index) {
-                                  return itemListHeaderWidget(
-                                      widget.listCheck[index], index);
-                                },
-                              ),
-                            ),
+                      Visibility(
+                        visible: !widget.isSearchAdvance,
+                        child: widget.listCheck == null || widget.listCheck.length == 0
+                            ? const Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "Không có bộ lọc nào",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        )
+                            : SizedBox(
+                          height: 50,
+                          child: ListView.builder(
+                            itemCount: widget.listCheck.length ?? 0,
+                            scrollDirection: Axis.horizontal,
+                            // ignore: missing_return
+                            itemBuilder: (context, index) {
+                              return itemListHeaderWidget(
+                                  widget.listCheck[index], index);
+                            },
+                          ),
+                        )
+                      ),
                       Container(
                         height: 1,
                         color: getColor('#dedede'),

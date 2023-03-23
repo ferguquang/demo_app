@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:workflow_manager/base/ui/empty_screen.dart';
@@ -205,6 +206,15 @@ class _ListResolveScreenState extends State<ListResolveScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(child: Text(countTask)),
+                GestureDetector(
+                  onTap: () {
+                    repository.downloadFileFromUrl(context);
+                  },
+                  child: SvgPicture.asset(
+                    "assets/svgs/export-file.svg",
+                    height: 24, width: 24, color: Colors.grey,
+                  ),
+                ),
                 IconButton(
                   icon: Icon(Icons.filter_list_outlined),
                   color: Colors.grey,

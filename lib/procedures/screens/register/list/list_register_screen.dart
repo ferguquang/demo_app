@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:workflow_manager/base/ui/empty_screen.dart';
@@ -12,6 +13,7 @@ import 'package:workflow_manager/procedures/screens/filter/filter_procedure_scre
 import 'package:workflow_manager/procedures/screens/register/list/event_reload_list_register.dart';
 import 'package:workflow_manager/procedures/screens/register/list/list_register_item.dart';
 import 'package:workflow_manager/procedures/screens/register/list/list_register_repository.dart';
+import 'package:workflow_manager/procedures/screens/register/list_work_follow/select_file_type/select_file_type_bottomsheet.dart';
 
 class ListRegisterScreen extends StatefulWidget {
   static final int TYPE_TOTAL =
@@ -167,6 +169,15 @@ class _ListRegisterScreenState extends State<ListRegisterScreen>
               child: Row(
                 children: [
                   Expanded(child: Text(countTask)),
+                  GestureDetector(
+                    onTap: () {
+                      repository.downloadFileFromUrl(widget.state, context);
+                    },
+                    child: SvgPicture.asset(
+                      "assets/svgs/export-file.svg",
+                      height: 24, width: 24, color: Colors.grey,
+                    ),
+                  ),
                   IconButton(
                     icon: Icon(Icons.filter_list_outlined),
                     color: Colors.grey,

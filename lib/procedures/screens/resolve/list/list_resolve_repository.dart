@@ -3,9 +3,11 @@ import 'package:workflow_manager/base/network/api_caller.dart';
 import 'package:workflow_manager/base/network/app_url.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
 import 'package:workflow_manager/base/utils/base_sharepreference.dart';
+import 'package:workflow_manager/base/utils/file_utils.dart';
 import 'package:workflow_manager/main.dart';
 import 'package:workflow_manager/procedures/models/params/list_register_request.dart';
 import 'package:workflow_manager/procedures/models/response/check_password_signal_response.dart';
+import 'package:workflow_manager/procedures/models/response/export_file_response.dart';
 import 'package:workflow_manager/procedures/models/response/list_resolve_response.dart';
 import 'package:workflow_manager/procedures/models/response/record_is_resolve_list_response.dart';
 import 'package:workflow_manager/procedures/models/response/response_list_register.dart';
@@ -194,5 +196,22 @@ class ListResolveRepository with ChangeNotifier {
   void clearData() {
     serviceRecords.clear();
     notifyListeners();
+  }
+
+  downloadFileFromUrl(context) async {
+    var json = await ApiCaller.instance.postFormData(
+        AppUrl.recordExport,
+        {
+          "State": state
+        }
+    );
+    ExportResponse response = ExportResponse.fromJson(json);
+    if (response.isSuccess()) {
+      FileUtils.instance.downloadFileAndOpen(
+        response.data.fileName, response.data.path, context,
+      );
+    } else {
+      ToastMessage.show("${response.messages}", ToastStyle.error);
+    }
   }
 }
