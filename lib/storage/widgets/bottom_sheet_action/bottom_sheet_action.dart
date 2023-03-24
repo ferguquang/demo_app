@@ -234,7 +234,7 @@ class _BottomSheetActionState extends State<BottomSheetActionScreen> {
                   }).showConfirmDialog();
               break;
             case 9:
-              CustomDialogWidget(widget.context, SelectDecentralizationDialog())
+              CustomDialogWidget(widget.context, SelectDecentralizationDialog(idFile: "${widget.dataStorage.iD}",),)
                   .show();
               break;
           }

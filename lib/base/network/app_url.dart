@@ -512,6 +512,12 @@ class AppUrl {
   static const String getListCategoryType = "StgFile/GetListCategoryType";
   static const String getCategoryTypeByID = "StgFile/GetCategoryTypeByID";
   static const String getCategoryByIDCategoryType = "StgFile/GetCategoryByIDCategoryType";
+  static const String stgFileShare = "StgFile/Share";
+  static const String deptGetList = "dept/getlist";
+  static const String teamGetList = "team/getlist";
+  static const String accountUsers = "account/users";
+  static const String stgFileShared = "StgFile/Shared";
+
 
   static String checkDownloadFile({bool isShared}) {
     var type = AppStore.currentBottomViewTypeStorage;

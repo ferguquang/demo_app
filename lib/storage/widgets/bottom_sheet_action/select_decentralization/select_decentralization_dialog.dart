@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workflow_manager/base/ui/custom_dialog.dart';
 
+import 'decentralization/decentralization_dialog.dart';
 import 'select_decentralization_item.dart';
 import 'select_decentralization_repository.dart';
 
 class SelectDecentralizationDialog extends StatefulWidget {
-  const SelectDecentralizationDialog({Key key}) : super(key: key);
+  String idFile;
+
+  SelectDecentralizationDialog({Key key, this.idFile}) : super(key: key);
 
   @override
   State<SelectDecentralizationDialog> createState() => _SelectDecentralizationDialogState();
@@ -18,7 +22,7 @@ class _SelectDecentralizationDialogState extends State<SelectDecentralizationDia
   void initState() {
     super.initState();
 
-    _repository.getListDecentralization();
+    _repository.getData(idFile: widget.idFile);
   }
 
   @override
@@ -35,7 +39,17 @@ class _SelectDecentralizationDialogState extends State<SelectDecentralizationDia
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text("Chọn quyền"),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back_ios),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }
+                      ),
+                      Text("Chọn quyền"),
+                    ],
+                  ),
                 ),
                 SelectDecentralizationItem(
                   model: DecentralizationModel(
@@ -86,23 +100,35 @@ class _SelectDecentralizationDialogState extends State<SelectDecentralizationDia
                     ))
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.all(8),
-                  margin: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(5.0)
-                    ),
-                  ),
-                  child: Center(
-                      child: Text(
-                        "Tiếp theo",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold
-                        ),
+                GestureDetector(
+                  onTap: () {
+                    CustomDialogWidget(context,
+                      DecentralizationDialog(
+                        repository: repository,
+                        onCallBack: () {
+                          Navigator.of(context).pop();
+                        },
                       )
+                    ).show();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    margin: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(5.0)
+                      ),
+                    ),
+                    child: Center(
+                        child: Text(
+                          "Tiếp theo",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                          ),
+                        )
+                    ),
                   ),
                 )
               ],

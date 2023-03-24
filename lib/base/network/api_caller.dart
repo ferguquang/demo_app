@@ -214,6 +214,43 @@ class ApiCaller {
     return responseJson;
   }
 
+  Future<dynamic> postFormData2(String path, Map<String, dynamic> params,
+      {bool isLoading = true, bool isNeedAddToken = true}) async {
+    // if (path.contains("report/wf")) {
+    // params["Token"] = "tGYk62qV86UJC15j8uvJe0oljziEgNbm/WvDu4E9hSUB\$a\$n\$G";
+    // } else {
+
+    if (params == null) {
+      params = Map();
+    }
+    if (isNeedAddToken)
+      params["Token"] = await SharedPreferencesClass.getToken();
+    // }
+    try {
+      printParams(params, path);
+    } catch (e) {
+      print("$e");
+    }
+    if (isLoading) {
+      showLoading();
+    }
+    var responseJson;
+    try {
+      var formData = FormData.fromMap(params);
+      Response response = await _dio.post(path, data: formData);
+      responseJson = json.decode(response.data.toString());
+    } on DioError catch (ex) {
+      return _errorException(dioError: ex);
+    } on Exception {
+      return _errorException();
+    } finally {
+      if (isLoading) {
+        hideLoading();
+      }
+    }
+    return responseJson;
+  }
+
   Future<dynamic> uploadFile(String path, Map<String, dynamic> params,
       {ProgressListener sendListener, bool isLoading = true}) async {
     params["Token"] = await SharedPreferencesClass.getToken();
