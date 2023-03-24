@@ -72,15 +72,16 @@ class _DecentralizationDialogState extends State<DecentralizationDialog> with Au
                       Navigator.of(context).pop();
                     }
                 ),
-                Text("Chọn đối tượng"),
+                Text("Chọn đối tượng", style: TextStyle(fontSize: 16),),
               ],
             ),
           ),
           SelectDecentralizationItem(
             model: DecentralizationModel(
                 label: "Tất cả mọi người",
-                isActive: widget.repository.isAllUser
+                isActive: widget.repository.isAllUser,
             ),
+            hasColorBackground: true,
             onClickListener: (item) {
               setState(() {
                 widget.repository.isAllUser = !widget.repository.isAllUser;
@@ -118,10 +119,6 @@ class _DecentralizationDialogState extends State<DecentralizationDialog> with Au
           ),
           GestureDetector(
             onTap: () async {
-              print("${widget.repository.accountUsers[0].isSelected}");
-              print("${widget.repository.deptList[0].isSelected}");
-              print("${widget.repository.teamList[0].isSelected}");
-
               Map<String, dynamic> params = Map();
               params["ID"] = widget.repository.stgFileShareResponse.data.stgdoc.iD;
               params["IDPublic"] = widget.repository.isAllUser ? 1 : 0;

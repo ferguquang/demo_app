@@ -147,7 +147,7 @@ class _BottomSheetActionState extends State<BottomSheetActionScreen> {
                         color: Colors.grey,
                       ),
                       _iconAndTextWidget(9, true,
-                          Icons.download_sharp, 'Phân quyền'),
+                          Icons.person, 'Phân quyền'),
 
                       _iconAndTextWidget(0, widget.dataStorage.isShowDownload,
                           Icons.download_sharp, 'Tải xuống'),

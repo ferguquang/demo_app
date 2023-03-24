@@ -47,7 +47,7 @@ class _SelectDecentralizationDialogState extends State<SelectDecentralizationDia
                           Navigator.of(context).pop();
                         }
                       ),
-                      Text("Chọn quyền"),
+                      Text("Chọn quyền", style: TextStyle(fontSize: 16),),
                     ],
                   ),
                 ),
@@ -56,6 +56,7 @@ class _SelectDecentralizationDialogState extends State<SelectDecentralizationDia
                     label: "Tất cả quyền",
                     isActive: repository.isAllDecentralization
                   ),
+                  hasColorBackground: true,
                   onClickListener: (item) {
                     repository.setAllDecentralization();
                   },
@@ -73,32 +74,38 @@ class _SelectDecentralizationDialogState extends State<SelectDecentralizationDia
                     );
                   }
                 ),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: repository.isAdditional,
-                      onChanged: (value) {
-                        repository.updateIsAdditional(value);
-                      }
-                    ),
-                    Expanded(child: Text("Bổ sung các quyền cho tất cả các thư mục bên trong"))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: repository.isRemove,
-                      onChanged: (value) {
-                        repository.updateIsRemove(value);
-                      }
-                    ),
-                    Expanded(child: Text(
-                      "Gỡ bỏ các quyền đã thiết lập ở thư mục bên trong",
-                      style: TextStyle(
-                        color: Colors.red
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: repository.isAdditional,
+                        onChanged: (value) {
+                          repository.updateIsAdditional(value);
+                        }
                       ),
-                    ))
-                  ],
+                      Expanded(child: Text("Bổ sung các quyền cho tất cả các thư mục bên trong"))
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: repository.isRemove,
+                        onChanged: (value) {
+                          repository.updateIsRemove(value);
+                        }
+                      ),
+                      Expanded(child: Text(
+                        "Gỡ bỏ các quyền đã thiết lập ở thư mục bên trong",
+                        style: TextStyle(
+                          color: Colors.red
+                        ),
+                      ))
+                    ],
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
