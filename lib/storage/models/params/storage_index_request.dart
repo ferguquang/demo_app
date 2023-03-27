@@ -32,8 +32,10 @@ class StorageIndexRequest {
   Map<String, dynamic> getParams() {
     Map<String, dynamic> params = new Map<String, dynamic>();
 
-    params["Take"] = this.take;
-    params["Skip"] = this.skip;
+    if (searchAdvanceParams == null) {
+      params["Take"] = this.take;
+      params["Skip"] = this.skip;
+    }
 
     if (sortType != null) {
       params["Sorttype"] = sortType;
@@ -62,10 +64,26 @@ class StorageIndexRequest {
 
     if (searchAdvanceParams != null) {
       params["isTypeSearchRecord"] = searchAdvanceParams.isTypeSearchRecord;
-      params["IDDoctype"] = searchAdvanceParams.idDoctype;
-      params["IDRecordType"] = searchAdvanceParams.idRecordType;
+      if (searchAdvanceParams.idDoctype != "0") {
+        params["IDDoctype"] = searchAdvanceParams.idDoctype;
+      }
+      if (searchAdvanceParams.idRecordType != "0") {
+        params["IDRecordType"] = searchAdvanceParams.idRecordType;
+      }
+
+      if (isNotNullOrEmpty(searchAdvanceParams.idCategories)) {
+        if (searchAdvanceParams.idCategories.length == 1) {
+          params["IDCategory"] = searchAdvanceParams.idCategories.first;
+        } else {
+          params["IDCategory"] = "[${searchAdvanceParams.idCategories.join(", ")}]";
+        }
+      }
       for (int i = 0; i < searchAdvanceParams.searchAdvanceList.length; i++) {
-        params["${searchAdvanceParams.searchAdvanceList[i].name}"] = "${searchAdvanceParams.searchAdvanceList[i].value}";
+        if (isNotNullOrEmpty("${searchAdvanceParams.searchAdvanceList[i].value}")) {
+          if (!searchAdvanceParams.searchAdvanceList[i].isCatalog) {
+            params["${searchAdvanceParams.searchAdvanceList[i].name}"] = "${searchAdvanceParams.searchAdvanceList[i].value}";
+          }
+        }
       }
     }
 
@@ -77,6 +95,7 @@ class SearchAdvanceParams {
   int isTypeSearchRecord;
   String idDoctype, idRecordType;
   List<RecordFieldSettings> searchAdvanceList = [];
+  List<String> idCategories;
 
-  SearchAdvanceParams({this.isTypeSearchRecord, this.idDoctype, this.idRecordType, this.searchAdvanceList});
+  SearchAdvanceParams({this.isTypeSearchRecord, this.idDoctype, this.idRecordType, this.searchAdvanceList, this.idCategories});
 }

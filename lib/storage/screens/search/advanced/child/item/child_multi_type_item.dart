@@ -51,7 +51,7 @@ class _ChildMultiTypeSearchItemState extends State<ChildMultiTypeSearchItem> {
         var json = await ApiCaller.instance.get(
           AppUrl.getCategoryByIDCategoryType,
           params: {
-            "id": widget.model.iDType
+            "id": widget.model.iDField
           }
         );
         GetCategoryByIDCategoryTypeResponse response = GetCategoryByIDCategoryTypeResponse.fromJson(json);
@@ -148,7 +148,15 @@ class _ChildMultiTypeSearchItemState extends State<ChildMultiTypeSearchItem> {
               )
             ),
             const SizedBox(width: 8,),
-            Icon(Icons.date_range, color: Colors.grey,)
+            Icon(Icons.date_range, color: Colors.grey,),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  widget.model.value = "";
+                });
+              },
+              child: Icon(Icons.close, color: Colors.grey,)
+            )
           ],
         ),
       ),

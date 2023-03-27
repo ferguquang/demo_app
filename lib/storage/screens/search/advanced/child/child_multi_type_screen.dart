@@ -60,9 +60,16 @@ class _ChildMultiTypeSearchScreenState extends State<ChildMultiTypeSearchScreen>
                 ),
                 GestureDetector(
                   onTap: () {
+                    List<String> idCategories = [];
                     for (int i = 0; i < repository.fieldSettings.length; i++) {
                       if (!repository.fieldSettings[i].isCatalog && repository.fieldSettings[i].datatype != "datetime" && repository.fieldSettings[i].datatype != "dcdatetime") {
                         repository.fieldSettings[i].value = repository.fieldSettings[i].textEditingController.text;
+                      }
+
+                      if (repository.fieldSettings[i].isCatalog) {
+                        if (isNotNullOrEmpty(repository.fieldSettings[i].value)) {
+                          idCategories.add(repository.fieldSettings[i].value);
+                        }
                       }
                     }
 
@@ -74,9 +81,10 @@ class _ChildMultiTypeSearchScreenState extends State<ChildMultiTypeSearchScreen>
 
                     request.searchAdvanceParams = SearchAdvanceParams(
                       searchAdvanceList: repository.fieldSettings,
-                      isTypeSearchRecord: repository.fieldSettings.first.iDType,
-                      idDoctype: repository.fieldSettings.first.iDType == 0 ? "${widget.idType}" : "0",
-                      idRecordType: repository.fieldSettings.first.iDType == 1 ? "${widget.idType}" : "0",
+                      isTypeSearchRecord: widget.isRecordType ? 1 : 0,
+                      idDoctype: !widget.isRecordType ? "${widget.idType}" : "0",
+                      idRecordType: widget.isRecordType ? "${widget.idType}" : "0",
+                      idCategories: idCategories
                     );
                     pushPage(context, DetailSearchStorageScreen(
                       request, null, null, StorageTopTabType.Document, StorageBottomTabType.DataStorage,
@@ -97,7 +105,7 @@ class _ChildMultiTypeSearchScreenState extends State<ChildMultiTypeSearchScreen>
                         Expanded(
                           child: Center(
                             child: Text(
-                              "Tìm kiếm hồ sơ",
+                              "Tìm kiếm ${widget.isRecordType ? "hồ sơ" : "tài liệu"}",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold

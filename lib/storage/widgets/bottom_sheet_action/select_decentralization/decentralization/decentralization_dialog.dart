@@ -52,6 +52,26 @@ class _DecentralizationDialogState extends State<DecentralizationDialog> with Au
         }
       }
     }
+
+    for (int i = 0; i< widget.repository.stgFileShareResponse.data.stgDocShareDepts.length; i++) {
+      int idDeptSelected = widget.repository.stgFileShareResponse.data.stgDocShareDepts[i].iDUserOrDeptOrTeam;
+      for (int j = 0; j < widget.repository.deptList.length; j++) {
+        int idDept = widget.repository.deptList[j].iD;
+        if (idDept == idDeptSelected) {
+          widget.repository.deptList[j].isSelected = true;
+        }
+      }
+    }
+
+    for (int i = 0; i< widget.repository.stgFileShareResponse.data.stgDocShareTeams.length; i++) {
+      int idTeamSelected = widget.repository.stgFileShareResponse.data.stgDocShareTeams[i].iDUserOrDeptOrTeam;
+      for (int j = 0; j < widget.repository.teamList.length; j++) {
+        int idTeam = widget.repository.teamList[j].iD;
+        if (idTeam == idTeamSelected) {
+          widget.repository.teamList[j].isSelected = true;
+        }
+      }
+    }
   }
 
   @override
@@ -121,39 +141,172 @@ class _DecentralizationDialogState extends State<DecentralizationDialog> with Au
             onTap: () async {
               Map<String, dynamic> params = Map();
               params["ID"] = widget.repository.stgFileShareResponse.data.stgdoc.iD;
-              params["IDPublic"] = widget.repository.isAllUser ? 1 : 0;
-              params["ViewIDPublic1"] = widget.repository.listDecentralization[0].isActive ? 1 : 0;
-              params["UpdateIDPublic1"] = widget.repository.listDecentralization[1].isActive ? 1 : 0;
-              params["DeleteIDPublic1"] = widget.repository.listDecentralization[2].isActive ? 1 : 0;
-              params["CreateIDPublic1"] = widget.repository.listDecentralization[3].isActive ? 1 : 0;
-              params["CopyIDPublic1"] = widget.repository.listDecentralization[4].isActive ? 1 : 0;
-              params["DownloadIDPublic1"] = widget.repository.listDecentralization[5].isActive ? 1 : 0;
-              params["MoveIDPublic1"] = widget.repository.listDecentralization[6].isActive ? 1 : 0;
-              params["ShareIDPublic1"] = widget.repository.listDecentralization[7].isActive ? 1 : 0;
+
+
+              if (widget.repository.listDecentralization[0].isActive) {
+                params["ViewIDPublic1"] = 1;
+              }
+
+              if (widget.repository.listDecentralization[1].isActive) {
+                params["UpdateIDPublic1"] = 1;
+              }
+
+              if (widget.repository.listDecentralization[2].isActive) {
+                params["DeleteIDPublic1"] = 1;
+              }
+
+              if (widget.repository.listDecentralization[3].isActive) {
+                params["CreateIDPublic1"] = 1;
+              }
+
+              if (widget.repository.listDecentralization[4].isActive) {
+                params["CopyIDPublic1"] = 1;
+              }
+
+              if (widget.repository.listDecentralization[5].isActive) {
+                params["DownloadIDPublic1"] = 1;
+              }
+
+              if (widget.repository.listDecentralization[6].isActive) {
+                params["MoveIDPublic1"] = 1;
+              }
+
+              if (widget.repository.listDecentralization[7].isActive) {
+                params["ShareIDPublic1"] = 1;
+              }
+
+              // if (widget.repository.isAllUser) {
+              //   params["IDPublic"] = 1;
+              // }
+              params["IDPublic"] = 1;
 
               List<String> idUsers = [], idDepts = [], idTeams = [];
               widget.repository.accountUsers.forEach((element) {
-                idUsers.add("${element.iD}");
+                if (element.isSelected) {
+                  idUsers.add("${element.iD}");
+                }
               });
-              params["IDUser"] = idUsers.join(",");
+              if (idUsers.isNotEmpty) {
+                params["IDUser"] = idUsers.join(",");
+              }
               idUsers.forEach((element) {
-                params["ViewIDUser$element"] = 1;
+                if (widget.repository.listDecentralization[0].isActive) {
+                  params["ViewIDUser$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[1].isActive) {
+                  params["UpdateIDUser$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[2].isActive) {
+                  params["DeleteIDUser$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[3].isActive) {
+                  params["CreateIDUser$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[4].isActive) {
+                  params["CopyIDUser$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[5].isActive) {
+                  params["DownloadIDUser$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[6].isActive) {
+                  params["MoveIDUser$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[7].isActive) {
+                  params["ShareIDUser$element"] = 1;
+                }
+                // params["ViewIDUser$element"] = 1;
               });
 
               widget.repository.deptList.forEach((element) {
-                idDepts.add("${element.iD}");
+                if (element.isSelected) {
+                  idDepts.add("${element.iD}");
+                }
               });
-              params["IDDept"] = idDepts.join(",");
+              if (idDepts.isNotEmpty) {
+                params["IDDept"] = idDepts.join(",");
+              }
               idDepts.forEach((element) {
-                params["ViewIDDept$element"] = 1;
+                if (widget.repository.listDecentralization[0].isActive) {
+                  params["ViewIDDept$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[1].isActive) {
+                  params["UpdateIDDept$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[2].isActive) {
+                  params["DeleteIDDept$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[3].isActive) {
+                  params["CreateIDDept$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[4].isActive) {
+                  params["CopyIDDept$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[5].isActive) {
+                  params["DownloadIDDept$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[6].isActive) {
+                  params["MoveIDDept$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[7].isActive) {
+                  params["ShareIDDept$element"] = 1;
+                }
               });
 
               widget.repository.teamList.forEach((element) {
-                idTeams.add("${element.iD}");
+                if (element.isSelected) {
+                  idTeams.add("${element.iD}");
+                }
               });
-              params["IDTeam"] = idTeams.join(",");
+              if (idTeams.isNotEmpty) {
+                params["IDTeam"] = idTeams.join(",");
+              }
               idTeams.forEach((element) {
-                params["ViewIDTeam$element"] = 1;
+                // params["ViewIDTeam$element"] = 1;
+                if (widget.repository.listDecentralization[0].isActive) {
+                  params["ViewIDTeam$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[1].isActive) {
+                  params["UpdateIDTeam$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[2].isActive) {
+                  params["DeleteIDTeam$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[3].isActive) {
+                  params["CreateIDTeam$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[4].isActive) {
+                  params["CopyIDTeam$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[5].isActive) {
+                  params["DownloadIDTeam$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[6].isActive) {
+                  params["MoveIDTeam$element"] = 1;
+                }
+
+                if (widget.repository.listDecentralization[7].isActive) {
+                  params["ShareIDTeam$element"] = 1;
+                }
               });
 
               params["IsAppliedAll"] = widget.repository.isAdditional ? 1 : 0;

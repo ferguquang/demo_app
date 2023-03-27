@@ -163,7 +163,7 @@ class ListRegisterRepository with ChangeNotifier {
     ExportResponse response = ExportResponse.fromJson(json);
     if (response.isSuccess()) {
       FileUtils.instance.downloadFileAndOpen(
-        response.data.fileName, response.data.path, context,
+        response.data.fileName, response.data.path, context, isOpenFile: false
       );
     } else {
       ToastMessage.show("${response.messages}", ToastStyle.error);

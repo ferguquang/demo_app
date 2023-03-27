@@ -95,7 +95,7 @@ class _SearchStorageAdvanceScreenState extends State<SearchStorageAdvanceScreen>
                       repository.setExpandDocType();
                     },
                     child: RecordTypeItem(
-                      model: RecordTypes(name: "Loại văn bản"),
+                      model: RecordTypes(name: "Loại tài liệu"),
                       index: 2,
                       isExpand: repository.isExpandDocType,
                     ),
