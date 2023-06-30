@@ -3,6 +3,7 @@ import 'package:workflow_manager/base/network/api_caller.dart';
 import 'package:workflow_manager/base/network/app_url.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
 import 'package:workflow_manager/base/utils/base_sharepreference.dart';
+import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/base/utils/file_utils.dart';
 import 'package:workflow_manager/main.dart';
 import 'package:workflow_manager/procedures/models/params/list_register_request.dart';
@@ -207,9 +208,7 @@ class ListResolveRepository with ChangeNotifier {
     );
     ExportResponse response = ExportResponse.fromJson(json);
     if (response.isSuccess()) {
-      FileUtils.instance.downloadFileAndOpen(
-        response.data.fileName, response.data.path, context, isOpenFile: false
-      );
+      downloadAndSaveFile(response.data.path, response.data.fileName);
     } else {
       ToastMessage.show("${response.messages}", ToastStyle.error);
     }

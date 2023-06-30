@@ -1,4 +1,4 @@
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
@@ -54,7 +54,7 @@ class SocketManager {
   }
 
   logoutSocket() async {
-    OneSignal.shared.setSubscription(false);
+    // OneSignal.shared.setSubscription(false);
 
     User user = await SharedPreferencesClass.getUser();
     String deviceID = await SharedPreferencesClass.get(SharedPreferencesClass.ONESIGNAL_ID_KEY);

@@ -11,18 +11,19 @@ class StgFileShareResponse extends BaseResponse {
 class Data {
   Stgdoc stgdoc;
   StgDocSharePublic stgDocSharePublic;
-  List<StgDocShareUsers> stgDocShareUsers;
-  List<StgDocShareUsers> stgDocShareDepts;
-  List<StgDocShareUsers> stgDocShareTeams;
+  // List<StgDocShareUsers> stgDocShareUsers;
+  // List<StgDocShareUsers> stgDocShareDepts;
+  // List<StgDocShareUsers> stgDocShareTeams;
 
   int typeStgdocShare;
 
   Data(
       {this.stgdoc,
         this.stgDocSharePublic,
-        this.stgDocShareUsers,
-        this.stgDocShareDepts,
-        this.stgDocShareTeams});
+        // this.stgDocShareUsers,
+        // this.stgDocShareDepts,
+        // this.stgDocShareTeams
+      });
 
   Data.fromJson(Map<String, dynamic> json) {
     stgdoc =
@@ -30,24 +31,24 @@ class Data {
     stgDocSharePublic = json['StgDocSharePublic'] != null ?
          new StgDocSharePublic.fromJson(json['StgDocSharePublic'])
         : null;
-    if (json['StgDocShareUsers'] != null) {
-      stgDocShareUsers = <StgDocShareUsers>[];
-      json['StgDocShareUsers'].forEach((v) {
-        stgDocShareUsers.add(new StgDocShareUsers.fromJson(v, 1));
-      });
-    }
-    if (json['StgDocShareDepts'] != null) {
-      stgDocShareDepts = <StgDocShareUsers>[];
-      json['StgDocShareDepts'].forEach((v) {
-        stgDocShareDepts.add(new StgDocShareUsers.fromJson(v, 2));
-      });
-    }
-    if (json['StgDocShareTeams'] != null) {
-      stgDocShareTeams = <StgDocShareUsers>[];
-      json['StgDocShareTeams'].forEach((v) {
-        stgDocShareTeams.add(new StgDocShareUsers.fromJson(v, 3));
-      });
-    }
+    // if (json['StgDocShareUsers'] != null) {
+    //   stgDocShareUsers = <StgDocShareUsers>[];
+    //   json['StgDocShareUsers'].forEach((v) {
+    //     stgDocShareUsers.add(new StgDocShareUsers.fromJson(v, 1));
+    //   });
+    // }
+    // if (json['StgDocShareDepts'] != null) {
+    //   stgDocShareDepts = <StgDocShareUsers>[];
+    //   json['StgDocShareDepts'].forEach((v) {
+    //     stgDocShareDepts.add(new StgDocShareUsers.fromJson(v, 2));
+    //   });
+    // }
+    // if (json['StgDocShareTeams'] != null) {
+    //   stgDocShareTeams = <StgDocShareUsers>[];
+    //   json['StgDocShareTeams'].forEach((v) {
+    //     stgDocShareTeams.add(new StgDocShareUsers.fromJson(v, 3));
+    //   });
+    // }
   }
 }
 
@@ -106,48 +107,64 @@ class Stgdoc {
     created = json['Created'];
   }
 }
-
 class StgDocSharePublic {
-  int iD;
-  int iDDoc;
-  int ownedBy;
-  String created;
+  int iDPublic;
+  String iDUser;
+  String iDDept;
+  String iDTeam;
+  bool isCreate;
   bool isView;
   bool isUpdate;
   bool isDelete;
+  bool isShare;
   bool isDownload;
   bool isCopy;
   bool isMove;
-  bool isCreate;
-  bool isShare;
 
   StgDocSharePublic(
-      {this.iD,
-        this.iDDoc,
-        this.ownedBy,
-        this.created,
+      {this.iDPublic,
+        this.iDUser,
+        this.iDDept,
+        this.iDTeam,
+        this.isCreate,
         this.isView,
         this.isUpdate,
         this.isDelete,
+        this.isShare,
         this.isDownload,
         this.isCopy,
-        this.isMove,
-        this.isCreate,
-        this.isShare});
+        this.isMove});
 
   StgDocSharePublic.fromJson(Map<String, dynamic> json) {
-    iD = json['ID'];
-    iDDoc = json['IDDoc'];
-    ownedBy = json['OwnedBy'];
-    created = json['Created'];
+    iDPublic = json['IDPublic'];
+    iDUser = json['IDUser'];
+    iDDept = json['IDDept'];
+    iDTeam = json['IDTeam'];
+    isCreate = json['IsCreate'];
     isView = json['IsView'];
     isUpdate = json['IsUpdate'];
     isDelete = json['IsDelete'];
+    isShare = json['IsShare'];
     isDownload = json['IsDownload'];
     isCopy = json['IsCopy'];
     isMove = json['IsMove'];
-    isCreate = json['IsCreate'];
-    isShare = json['IsShare'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['IDPublic'] = this.iDPublic;
+    data['IDUser'] = this.iDUser;
+    data['IDDept'] = this.iDDept;
+    data['IDTeam'] = this.iDTeam;
+    data['IsCreate'] = this.isCreate;
+    data['IsView'] = this.isView;
+    data['IsUpdate'] = this.isUpdate;
+    data['IsDelete'] = this.isDelete;
+    data['IsShare'] = this.isShare;
+    data['IsDownload'] = this.isDownload;
+    data['IsCopy'] = this.isCopy;
+    data['IsMove'] = this.isMove;
+    return data;
   }
 }
 

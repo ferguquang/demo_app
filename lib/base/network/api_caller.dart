@@ -318,6 +318,51 @@ class ApiCaller {
     return false;
   }
 
+  Future<dynamic> downloadFile2(String filePath, fileName,
+      {ProgressListener receiverListener,
+        bool isLoading = true,
+        bool isAutoDetectFileName = false}) async {
+    if (isLoading) {
+      showLoading();
+    }
+    String savePath = filePath.startsWith("/")
+        ? filePath
+        : await FileUtils.instance.getFilePath(filePath);
+    try {
+      Dio dio = Dio();
+      dio.interceptors
+          .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
+        String token = await SharedPreferencesClass.getToken();
+        var customHeaders = {
+          'content-type': 'application/json',
+          'Authorization': token
+        };
+        options.baseUrl = AppUrl.baseURL;
+        options.connectTimeout = 30000;
+        options.receiveTimeout = 30000;
+        options.sendTimeout = 30000;
+        options.headers.addAll(customHeaders);
+        options.responseType = ResponseType.bytes;
+        return options;
+      }));
+      Response response = await dio.download(
+        filePath,
+        isAutoDetectFileName == true ? getFileName : savePath,
+      );
+      File file = File(savePath);
+      var raf = file.openSync(mode: FileMode.write);
+      // response.data is List<int> type
+      raf.writeFromSync(response.data);
+      await raf.close();
+      return response.statusCode == 200;
+    } on Exception catch (ex) {} finally {
+      if (isLoading) {
+        hideLoading();
+      }
+    }
+    return false;
+  }
+
   String getFileName(Headers responseHeaders) {
     List<String> listData = responseHeaders["content-disposition"];
     if (isNullOrEmpty(listData)) return "tai ve.zip";

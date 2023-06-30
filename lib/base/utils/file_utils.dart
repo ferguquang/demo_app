@@ -277,9 +277,9 @@ class FileUtils {
       );
     } on Exception {
       var device = await DeviceInfoPlugin().androidInfo;
-      if (["10", "11"].contains(device.version.release))
-        showErrorToast(
-            "Máy bạn đang dùng android ${device.version.release}, Chúng tôi hiện chưa hỗ trợ bản android này, chúng tôi sẽ cố gắng hỗ trợ trong thời gian sớm nhất.");
+      // if (["10", "11"].contains(device.version.release))
+      //   showErrorToast(
+      //       "Máy bạn đang dùng android ${device.version.release}, Chúng tôi hiện chưa hỗ trợ bản android này, chúng tôi sẽ cố gắng hỗ trợ trong thời gian sớm nhất.");
     }
   }
 

@@ -11,6 +11,7 @@ import 'package:math_expressions/math_expressions.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:workflow_manager/base/extension/string.dart';
+import 'package:workflow_manager/base/network/api_caller.dart';
 import 'package:workflow_manager/base/ui/confirm_dialog_widget.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
 import 'package:workflow_manager/base/utils/app_constant.dart';
@@ -18,6 +19,8 @@ import 'package:workflow_manager/shopping_management/response/provider_detail_re
 import 'package:workflow_manager/workflow/models/directory_path.dart';
 
 import '../../main.dart';
+import 'package:http/http.dart' as http;
+
 
 Color getColor(String hex, {int alpha}) {
   return hex.toColor();
@@ -368,4 +371,22 @@ int compareVersion(String version1, String version2) {
     }
   }
   return list1.length.compareTo(list2.length);
+}
+
+
+Future<String> downloadAndSaveFile(String url, String fileName) async {
+  try {
+    String fullPath = "/storage/emulated/0/Download/$fileName";
+    final http.Response response = await http.get(url);
+    final File file = File(fullPath);
+
+    var raf = file.openSync(mode: FileMode.writeOnly);
+    raf.writeFromSync(response.bodyBytes);
+    await raf.close();
+    ToastMessage.show("Tải xuống thành công", ToastStyle.success);
+    return fullPath;
+  } catch (e) {
+    print("download file error: $e");
+    return "";
+  }
 }

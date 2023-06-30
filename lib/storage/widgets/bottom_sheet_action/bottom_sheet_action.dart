@@ -28,8 +28,10 @@ class BottomSheetAction {
 
   String typeExtension;
 
+  bool isShowShare;
+
   BottomSheetAction(this.context, this.dataStorage, this.idParen,
-      {this.typeExtension});
+      {this.typeExtension, this.isShowShare = false});
 
   double getHeight() {
     List<bool> listDisplay = List<bool>();
@@ -58,7 +60,13 @@ class BottomSheetAction {
     if (dataStorage.isDelete) {
       listDisplay.add(dataStorage.isDelete);
     }
-    return (listDisplay.length * 55.0) + 60.0;
+
+    if (dataStorage.isShare) {
+      listDisplay.add(dataStorage.isShare);
+    }
+
+    double heightPin = !dataStorage.isShowPin ? 30 : 0;
+    return (listDisplay.length * 55.0) + 60 + heightPin;
   }
 
   Future<dynamic> showBottomSheetDialog() async {
@@ -74,7 +82,7 @@ class BottomSheetAction {
             child: Container(
               color: Colors.white,
               child: BottomSheetActionScreen(
-                  this.dataStorage, this.context, idParen),
+                  this.dataStorage, this.context, idParen, isShowShare: isShowShare,),
             ),
           );
         });
@@ -86,8 +94,9 @@ class BottomSheetActionScreen extends StatefulWidget {
   BuildContext
       context; // không dc xóa context này(nếu không sẽ không đóng dc dialog)
   int idParen;
+  bool isShowShare;
 
-  BottomSheetActionScreen(this.dataStorage, this.context, this.idParen);
+  BottomSheetActionScreen(this.dataStorage, this.context, this.idParen, {this.isShowShare = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -109,77 +118,73 @@ class _BottomSheetActionState extends State<BottomSheetActionScreen> {
       create: (context) => _repository,
       child: Consumer(
         builder: (context, BottomSheetActionRepository _repository, child) {
-          return Scaffold(
-            body: SafeArea(
-              child: ListView.builder(
-                itemCount: 1,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 32, top: 16, right: 32, bottom: 16),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(right: 16),
-                              child: Image.asset(ImageUtils.instance
-                                  .checkImageFileWith(
-                                      widget.dataStorage?.typeExtension ?? 0)),
-                              width: 32,
-                              height: 32,
-                            ),
-                            Expanded(
-                              child: Text(
-                                widget.dataStorage?.name ?? '',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                            )
-                          ],
+          return ListView.builder(
+            itemCount: 1,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 32, top: 16, right: 32, bottom: 16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 16),
+                          child: Image.asset(ImageUtils.instance
+                              .checkImageFileWith(
+                              widget.dataStorage?.typeExtension ?? 0)),
+                          width: 32,
+                          height: 32,
                         ),
-                      ),
+                        Expanded(
+                          child: Text(
+                            widget.dataStorage?.name ?? '',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
 
-                      Container(
-                        height: 0.5,
-                        color: Colors.grey,
-                      ),
-                      _iconAndTextWidget(9, true,
-                          Icons.person, 'Phân quyền'),
+                  Container(
+                    height: 0.5,
+                    color: Colors.grey,
+                  ),
+                  _iconAndTextWidget(9, widget.dataStorage.isShare && widget.isShowShare,
+                      Icons.person, 'Phân quyền'),
 
-                      _iconAndTextWidget(0, widget.dataStorage.isShowDownload,
-                          Icons.download_sharp, 'Tải xuống'),
-                      _iconAndTextWidget(1, widget.dataStorage.isMove,
-                          Icons.folder_special, 'Di chuyển'),
-                      _iconAndTextWidget(2, widget.dataStorage.isUpdate,
-                          Icons.edit, 'Đổi tên'),
-                      _iconAndTextWidget(3, widget.dataStorage.isShowReplace,
-                          Icons.content_copy_outlined, 'Thay thế'),
-                      _iconAndTextWidget(4, true, Icons.star_border, 'Ghim',
-                          isCheckToggle: true),
-                      // mặc định là hiển thị isShow = true, isCheckToggle = true
-                      _iconAndTextWidget(5, widget.dataStorage.isShowPassWord,
-                          Icons.lock, 'Đặt mật khẩu'),
-                      _iconAndTextWidget(
-                          6,
-                          widget.dataStorage.isShowChangePassWord,
-                          Icons.lock,
-                          'Thay mật khẩu'),
-                      _iconAndTextWidget(
-                          7,
-                          widget.dataStorage.isShowChangePassWord,
-                          Icons.lock_open_outlined,
-                          'Hủy mật khẩu'),
-                      _iconAndTextWidget(
-                          8, widget.dataStorage.isDelete, Icons.delete, 'Xóa'),
-                    ],
-                  );
-                },
-                physics: const NeverScrollableScrollPhysics(),
-              ),
-            ),
+                  _iconAndTextWidget(0, widget.dataStorage.isShowDownload,
+                      Icons.download_sharp, 'Tải xuống'),
+                  _iconAndTextWidget(1, widget.dataStorage.isMove,
+                      Icons.folder_special, 'Di chuyển'),
+                  _iconAndTextWidget(2, widget.dataStorage.isUpdate,
+                      Icons.edit, 'Đổi tên'),
+                  _iconAndTextWidget(3, widget.dataStorage.isShowReplace,
+                      Icons.content_copy_outlined, 'Thay thế'),
+                  _iconAndTextWidget(4, true, Icons.star_border, 'Ghim',
+                      isCheckToggle: true),
+                  // mặc định là hiển thị isShow = true, isCheckToggle = true
+                  _iconAndTextWidget(5, widget.dataStorage.isShowPassWord,
+                      Icons.lock, 'Đặt mật khẩu'),
+                  _iconAndTextWidget(
+                      6,
+                      widget.dataStorage.isShowChangePassWord,
+                      Icons.lock,
+                      'Thay mật khẩu'),
+                  _iconAndTextWidget(
+                      7,
+                      widget.dataStorage.isShowChangePassWord,
+                      Icons.lock_open_outlined,
+                      'Hủy mật khẩu'),
+                  _iconAndTextWidget(
+                      8, widget.dataStorage.isDelete, Icons.delete, 'Xóa'),
+                ],
+              );
+            },
+            physics: const NeverScrollableScrollPhysics(),
           );
         },
       ),

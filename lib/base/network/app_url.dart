@@ -2,33 +2,10 @@ import 'package:workflow_manager/base/utils/app_store.dart';
 import 'package:workflow_manager/storage/screens/tabs/main_tab_storage_screen.dart';
 
 class AppUrl {
-  // TEST
-  // static const String baseURL = "http://api-gateway.lione.vn/api/";
-  // static const String baseURL = "http://test-api.lione.vn/api/";
-  // static const String oneSignalAppID = '174cef11-9b50-4e38-9304-940f6b909233';
-
-  // DEV
-  // static const String baseURL = "http://dev-api.lione.vn/api/";
-  // static const String oneSignalAppID = '174cef11-9b50-4e38-9304-940f6b909233';
-
-  // DEV SME
-  // static const String baseURL = "http://dev-api.sme.lione.vn/api/";
-  // static const String oneSignalAppID = '174cef11-9b50-4e38-9304-940f6b909233';
-
-  // UAT:
-  // static String baseURL = "https://api-gateway.lione.vn/api/";
-  // static const String oneSignalAppID ='dc6a8a20-0674-4d87-b681-cf67d5308fa4';
-
-  // RELEASE:
-  // static const String baseURL = "https://api-gateway.lione.vn/api/";
-  // static const String baseURL = "https://apiqtnb.evngenco2.vn:8091/api/";
-  // static const String baseURL = "http://118.70.48.211:1681/api/";
-  // static const String baseURL = "http://27.72.28.202:9110/api/"; // hải phòng
-  // static const String baseURL = "http://cds.ndhp.vn:8882/api/"; // hải phòng public
-  // static const String baseURL = "http://183.91.4.70:8081/api/"; // ban quản lý các dự án
-  // static const String baseURL = "http://118.70.48.211:8021/api/"; // uat
-
-  static const String baseURL = "http://118.70.48.211:8022/api/"; // VPS
+  // static const String baseURL = "https://api-voffice.vps.com.vn/api/"; // VPS
+  static const String baseURL = "http://58.186.205.66:81/api/"; // VPS
+  // static const String baseURL = "http://113.160.101.102:8022/api/"; //
+  // static const String baseURL = "http://27.72.28.202:9216/api/"; // viettel
   // static const String baseURL = "http://27.72.28.202:9218/api/"; // axa
   // static const String baseURL = "http://118.70.48.211:8025/api/"; // STH
 

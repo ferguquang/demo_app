@@ -199,6 +199,7 @@ class ActionRepository with ChangeNotifier {
             paramsRegitster: doneInfoRequest.getParams(),
             signatures: response.data.userSignatures,
             isTypeRegister: false,
+            isSigned: true,
             iDGroupPdfForm: response.data.iDGroup.toString(),
           ));
       if (status == 1) {

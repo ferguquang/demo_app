@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:workflow_manager/base/network/api_caller.dart';
 import 'package:workflow_manager/base/network/app_url.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
+import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/base/utils/file_utils.dart';
 import 'package:workflow_manager/main.dart';
 import 'package:workflow_manager/procedures/models/params/list_register_request.dart';
@@ -11,6 +16,7 @@ import 'package:workflow_manager/procedures/models/response/response_list_regist
 import 'package:workflow_manager/procedures/models/response/search_procedure_model.dart';
 import 'package:workflow_manager/procedures/screens/register/list/list_register_screen.dart';
 import 'package:workflow_manager/workflow/models/response/message_response.dart';
+
 
 class ListRegisterRepository with ChangeNotifier {
   ApiCaller apiCaller = ApiCaller.instance;
@@ -162,9 +168,11 @@ class ListRegisterRepository with ChangeNotifier {
     );
     ExportResponse response = ExportResponse.fromJson(json);
     if (response.isSuccess()) {
-      FileUtils.instance.downloadFileAndOpen(
-        response.data.fileName, response.data.path, context, isOpenFile: false
-      );
+      // FileUtils.instance.downloadFileAndOpen(
+      //   response.data.fileName, response.data.path, context, isOpenFile: false
+      // );
+
+      downloadAndSaveFile(response.data.path, response.data.fileName);
     } else {
       ToastMessage.show("${response.messages}", ToastStyle.error);
     }
@@ -177,4 +185,6 @@ class ListRegisterRepository with ChangeNotifier {
       return null;
     }
   }
+
+
 }

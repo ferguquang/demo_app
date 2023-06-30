@@ -706,7 +706,7 @@ class ListStorageState extends State<ListStorageScreen> {
         DocChildItem item = this._listStorageRepository?.listDocs[index];
         item.passWordItem = password;
         return InkWell(
-          child: ListStorageItem(item, _listStorageRepository.docParent?.iD),
+          child: ListStorageItem(item, _listStorageRepository.docParent?.iD, isShowShare: widget.type == StorageBottomTabType.DataStorage,),
           onTap: () {
             _showNextScreen(item);
           },

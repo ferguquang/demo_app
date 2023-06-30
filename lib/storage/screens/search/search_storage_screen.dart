@@ -108,7 +108,8 @@ class SearchStorageState extends State<SearchStorageScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        pushPage(context, SearchStorageAdvanceScreen());
+                        bool isVisible = widget.type == StorageBottomTabType.MyFile || widget.type == StorageBottomTabType.Shared;
+                        pushPage(context, SearchStorageAdvanceScreen(isVisibleSearchRecord: !isVisible,));
                       },
                       child: Container(
                         height: 40,

@@ -10,7 +10,9 @@ import 'child/child_multi_type_screen.dart';
 import 'search_storage_advance_repository.dart';
 
 class SearchStorageAdvanceScreen extends StatefulWidget {
-  const SearchStorageAdvanceScreen({Key key}) : super(key: key);
+  bool isVisibleSearchRecord = true;
+  
+  SearchStorageAdvanceScreen({Key key, this.isVisibleSearchRecord}) : super(key: key);
 
   @override
   State<SearchStorageAdvanceScreen> createState() => _SearchStorageAdvanceScreenState();
@@ -57,37 +59,44 @@ class _SearchStorageAdvanceScreenState extends State<SearchStorageAdvanceScreen>
               physics: AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      repository.setExpandRecordType();
-                    },
-                    child: RecordTypeItem(
-                      model: RecordTypes(name: "Loại hồ sơ"),
-                      index: 1,
-                      isExpand: repository.isExpandRecordType,
-                    ),
-                  ),
                   Visibility(
-                    visible: repository.isExpandRecordType,
-                    child: ListView.builder(
-                      itemCount: repository.recordTypes.length,
-                      padding: EdgeInsets.zero,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
+                    visible: widget.isVisibleSearchRecord,
+                    child: Column(
+                      children: [
+                        GestureDetector(
                           onTap: () {
-                            pushPage(context, ChildMultiTypeSearchScreen(
-                              idType: "${repository.recordTypes[index].iD}",
-                              isRecordType: true,
-                            ));
+                            repository.setExpandRecordType();
                           },
-                          child: ChildSearchItem(
-                            model: repository.recordTypes[index],
-                            // index: index,
+                          child: RecordTypeItem(
+                            model: RecordTypes(name: "Loại hồ sơ"),
+                            index: 1,
+                            isExpand: repository.isExpandRecordType,
                           ),
-                        );
-                      }
+                        ),
+                        Visibility(
+                            visible: repository.isExpandRecordType,
+                            child: ListView.builder(
+                                itemCount: repository.recordTypes.length,
+                                padding: EdgeInsets.zero,
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      pushPage(context, ChildMultiTypeSearchScreen(
+                                        idType: "${repository.recordTypes[index].iD}",
+                                        isRecordType: true,
+                                      ));
+                                    },
+                                    child: ChildSearchItem(
+                                      model: repository.recordTypes[index],
+                                      // index: index,
+                                    ),
+                                  );
+                                }
+                            )
+                        )
+                      ],
                     )
                   ),
                   GestureDetector(

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:workflow_manager/base/extension/string.dart';
 import 'package:workflow_manager/base/models/base_response.dart';
@@ -273,7 +272,7 @@ class AuthRepository extends ChangeNotifier {
       }
     }
     SocketManager().logoutSocket();
-    await FlutterLocalNotificationsPlugin().cancelAll();
+    // await FlutterLocalNotificationsPlugin().cancelAll();
     FlutterAppBadger.removeBadge();
     await SharedPreferencesClass.save(
         SharedPreferencesClass.UNREADNOTIFICATION, 0);

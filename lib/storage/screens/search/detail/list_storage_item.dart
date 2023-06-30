@@ -7,7 +7,9 @@ import 'package:workflow_manager/storage/widgets/bottom_sheet_action/bottom_shee
 class ListStorageItem extends StatelessWidget {
   DocChildItem item;
   int idParen;
-  ListStorageItem(this.item, this.idParen);
+  bool isShowShare;
+
+  ListStorageItem(this.item, this.idParen, {this.isShowShare = false});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,7 @@ class ListStorageItem extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              BottomSheetAction(context, item, idParen).showBottomSheetDialog();
+              BottomSheetAction(context, item, idParen, isShowShare: isShowShare).showBottomSheetDialog();
             },
             icon: Icon(
               Icons.more_vert_sharp,

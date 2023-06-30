@@ -150,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 140,
                           height: 140,
                           // child: SVGImage(svgName: "logo_app"),
-                          child: Image.asset('assets/images/playstore-icon.png'),
+                          child: Image.asset('assets/images/playstore-icon-vps.png'),
                         ),
                       ),
                       Text(

@@ -9,7 +9,7 @@ class SelectDecentralizationRepository extends ChangeNotifier {
   bool isAllDecentralization = false;
   bool isAllUser = false;
 
-  bool isAdditional = false, isRemove = false;
+  bool isAdditional = true, isRemove = false;
   List<Categories> deptList = [], teamList = [], accountUsers = [];
   StgFileShareResponse stgFileShareResponse;
 
@@ -33,6 +33,7 @@ class SelectDecentralizationRepository extends ChangeNotifier {
       }
     );
     stgFileShareResponse = StgFileShareResponse.fromJson(jsonStgFileShare);
+    isAllUser = stgFileShareResponse.data.stgDocSharePublic.iDPublic == 1;
 
     getListDecentralization(stgFileShareResponse.data.stgDocSharePublic);
 

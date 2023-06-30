@@ -43,31 +43,37 @@ class _DecentralizationDialogState extends State<DecentralizationDialog> with Au
   }
 
   void setSelectedData() {
-    for (int i = 0; i < widget.repository.stgFileShareResponse.data.stgDocShareUsers.length; i++) {
-      int idUserSelected = widget.repository.stgFileShareResponse.data.stgDocShareUsers[i].iDUserOrDeptOrTeam;
+    String idUserSelecteds = widget.repository.stgFileShareResponse.data.stgDocSharePublic.iDUser;
+    List<String> listIDUserSelected = idUserSelecteds.split(',');
+    for (int i = 0; i < listIDUserSelected.length; i++) {
+      String idUserSelected = listIDUserSelected[i];
       for (int j = 0; j < widget.repository.accountUsers.length; j++) {
         int idUser = widget.repository.accountUsers[j].iD;
-        if (idUserSelected == idUser) {
+        if (idUserSelected == "$idUser") {
           widget.repository.accountUsers[j].isSelected = true;
         }
       }
     }
 
-    for (int i = 0; i< widget.repository.stgFileShareResponse.data.stgDocShareDepts.length; i++) {
-      int idDeptSelected = widget.repository.stgFileShareResponse.data.stgDocShareDepts[i].iDUserOrDeptOrTeam;
+    String idDeptSelecteds = widget.repository.stgFileShareResponse.data.stgDocSharePublic.iDDept;
+    List<String> listIDDeptSelected = idDeptSelecteds.split(',');
+    for (int i = 0; i < listIDDeptSelected.length; i++) {
+      String idDeptSelected = listIDDeptSelected[i];
       for (int j = 0; j < widget.repository.deptList.length; j++) {
         int idDept = widget.repository.deptList[j].iD;
-        if (idDept == idDeptSelected) {
+        if ("$idDept" == idDeptSelected) {
           widget.repository.deptList[j].isSelected = true;
         }
       }
     }
 
-    for (int i = 0; i< widget.repository.stgFileShareResponse.data.stgDocShareTeams.length; i++) {
-      int idTeamSelected = widget.repository.stgFileShareResponse.data.stgDocShareTeams[i].iDUserOrDeptOrTeam;
+    String idTeamSelecteds = widget.repository.stgFileShareResponse.data.stgDocSharePublic.iDTeam;
+    List<String> listIDTeamSelected = idTeamSelecteds.split(',');
+    for (int i = 0; i < listIDTeamSelected.length; i++) {
+      String idTeamSelected = listIDTeamSelected[i];
       for (int j = 0; j < widget.repository.teamList.length; j++) {
         int idTeam = widget.repository.teamList[j].iD;
-        if (idTeam == idTeamSelected) {
+        if ("$idTeam" == idTeamSelected) {
           widget.repository.teamList[j].isSelected = true;
         }
       }
@@ -175,10 +181,10 @@ class _DecentralizationDialogState extends State<DecentralizationDialog> with Au
                 params["ShareIDPublic1"] = 1;
               }
 
-              // if (widget.repository.isAllUser) {
-              //   params["IDPublic"] = 1;
-              // }
-              params["IDPublic"] = 1;
+              if (widget.repository.isAllUser) {
+                params["IDPublic"] = 1;
+              }
+              // params["IDPublic"] = 1;
 
               List<String> idUsers = [], idDepts = [], idTeams = [];
               widget.repository.accountUsers.forEach((element) {

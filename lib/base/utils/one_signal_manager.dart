@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:workflow_manager/base/models/base_response.dart';
 import 'package:workflow_manager/base/models/storage_index_response.dart';
 import 'package:workflow_manager/base/network/api_caller.dart';
@@ -49,99 +49,99 @@ class OneSignalManager {
   }
 
   Future<void> initOneSignal(BuildContext context) async {
-    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-    var settings = {
-      OSiOSSettings.autoPrompt: true,
-      OSiOSSettings.promptBeforeOpeningPushUrl: true
-    };
-    OneSignal.shared.setRequiresUserPrivacyConsent(true);
-    await OneSignal.shared.init(AppUrl.oneSignalAppID, iOSSettings: settings);
-    OneSignal.shared
-        .setNotificationReceivedHandler((OSNotification notification) async {
-      int unreadnotification = await SharedPreferencesClass.get(
-          SharedPreferencesClass.UNREADNOTIFICATION);
-      if (unreadnotification == null) unreadnotification = 0;
-      FlutterAppBadger.updateBadgeCount(unreadnotification + 1);
-      await SharedPreferencesClass.save(
-          SharedPreferencesClass.UNREADNOTIFICATION, unreadnotification + 1);
-
-      // var jsonResponse = notification.payload.additionalData;
-      // NotificationInfos notificationInfos =
-      //     NotificationInfos.fromJson(jsonResponse);
-      // print("OneSignal: ReceivedHandler: ${notification.jsonRepresentation()}");
-      // print("OneSignal: notificationInfos: ${notificationInfos?.toJson()}");
-    });
-
+    // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    // var settings = {
+    //   OSiOSSettings.autoPrompt: true,
+    //   OSiOSSettings.promptBeforeOpeningPushUrl: true
+    // };
+    // OneSignal.shared.setRequiresUserPrivacyConsent(true);
+    // await OneSignal.shared.init(AppUrl.oneSignalAppID, iOSSettings: settings);
+    // OneSignal.shared
+    //     .setNotificationReceivedHandler((OSNotification notification) async {
+    //   int unreadnotification = await SharedPreferencesClass.get(
+    //       SharedPreferencesClass.UNREADNOTIFICATION);
+    //   if (unreadnotification == null) unreadnotification = 0;
+    //   FlutterAppBadger.updateBadgeCount(unreadnotification + 1);
+    //   await SharedPreferencesClass.save(
+    //       SharedPreferencesClass.UNREADNOTIFICATION, unreadnotification + 1);
     //
-    OneSignal.shared
-        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      print(
-          "OneSignal: OpenedHandler: ${result.notification.jsonRepresentation()}");
-      var jsonResponse = result.notification.payload.additionalData;
-      NotificationInfos notificationInfos =
-          NotificationInfos.fromJson(jsonResponse);
-      if (appState == AppLifecycleState.resumed)
-        navigationTargetScreen(context, notificationInfos);
-      else {
-        lateNotificationInfos = notificationInfos;
-      }
-      print("OneSignal: IDCONTENT: ${notificationInfos?.iDContent}");
-    });
-
-    OneSignal.shared
-        .setInAppMessageClickedHandler((OSInAppMessageAction action) {
-      print(
-          "OneSignal: setInAppMessageClickedHandler: ${action.jsonRepresentation()}");
-    });
-
-    OneSignal.shared
-        .setInFocusDisplayType(OSNotificationDisplayType.notification);
-    // quan trọng
-    OneSignal.shared.consentGranted(true);
-
-    var status = await OneSignal.shared.getPermissionSubscriptionState();
-    bool isSubscribed = status.subscriptionStatus.subscribed;
-    if (isSubscribed == false) {
-      await OneSignal.shared.setSubscription(true);
-      var statues = await OneSignal.shared.getPermissionSubscriptionState();
-      isSubscribed = statues.subscriptionStatus.subscribed;
-      var playerId = statues.subscriptionStatus.userId;
-      if (playerId != null) {
-        SharedPreferencesClass.save(
-            SharedPreferencesClass.ONESIGNAL_ID_KEY, playerId);
-        // send onesigal-Id qua api này thay cho truyền trong socket
-        sendInfoDevice(playerId);
-        // SocketManager().connect();
-      } else {
-        // lần đầu vào thì playerId sẽ = null cho nên sẽ phải check
-        getPlayerID();
-      }
-    } else {
-      var playerId = status.subscriptionStatus.userId;
-      if (playerId != null) {
-        SharedPreferencesClass.save(
-            SharedPreferencesClass.ONESIGNAL_ID_KEY, playerId);
-        // send onesigal-Id qua api này thay cho truyền trong socket
-        sendInfoDevice(playerId);
-        // SocketManager().connect();
-      } else {
-        // lần đầu vào thì playerId sẽ = null cho nên sẽ phải check
-        getPlayerID();
-      }
-    }
+    //   // var jsonResponse = notification.payload.additionalData;
+    //   // NotificationInfos notificationInfos =
+    //   //     NotificationInfos.fromJson(jsonResponse);
+    //   // print("OneSignal: ReceivedHandler: ${notification.jsonRepresentation()}");
+    //   // print("OneSignal: notificationInfos: ${notificationInfos?.toJson()}");
+    // });
+    //
+    // //
+    // OneSignal.shared
+    //     .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+    //   print(
+    //       "OneSignal: OpenedHandler: ${result.notification.jsonRepresentation()}");
+    //   var jsonResponse = result.notification.payload.additionalData;
+    //   NotificationInfos notificationInfos =
+    //       NotificationInfos.fromJson(jsonResponse);
+    //   if (appState == AppLifecycleState.resumed)
+    //     navigationTargetScreen(context, notificationInfos);
+    //   else {
+    //     lateNotificationInfos = notificationInfos;
+    //   }
+    //   print("OneSignal: IDCONTENT: ${notificationInfos?.iDContent}");
+    // });
+    //
+    // OneSignal.shared
+    //     .setInAppMessageClickedHandler((OSInAppMessageAction action) {
+    //   print(
+    //       "OneSignal: setInAppMessageClickedHandler: ${action.jsonRepresentation()}");
+    // });
+    //
+    // OneSignal.shared
+    //     .setInFocusDisplayType(OSNotificationDisplayType.notification);
+    // // quan trọng
+    // OneSignal.shared.consentGranted(true);
+    //
+    // var status = await OneSignal.shared.getPermissionSubscriptionState();
+    // bool isSubscribed = status.subscriptionStatus.subscribed;
+    // if (isSubscribed == false) {
+    //   await OneSignal.shared.setSubscription(true);
+    //   var statues = await OneSignal.shared.getPermissionSubscriptionState();
+    //   isSubscribed = statues.subscriptionStatus.subscribed;
+    //   var playerId = statues.subscriptionStatus.userId;
+    //   if (playerId != null) {
+    //     SharedPreferencesClass.save(
+    //         SharedPreferencesClass.ONESIGNAL_ID_KEY, playerId);
+    //     // send onesigal-Id qua api này thay cho truyền trong socket
+    //     sendInfoDevice(playerId);
+    //     // SocketManager().connect();
+    //   } else {
+    //     // lần đầu vào thì playerId sẽ = null cho nên sẽ phải check
+    //     getPlayerID();
+    //   }
+    // } else {
+    //   var playerId = status.subscriptionStatus.userId;
+    //   if (playerId != null) {
+    //     SharedPreferencesClass.save(
+    //         SharedPreferencesClass.ONESIGNAL_ID_KEY, playerId);
+    //     // send onesigal-Id qua api này thay cho truyền trong socket
+    //     sendInfoDevice(playerId);
+    //     // SocketManager().connect();
+    //   } else {
+    //     // lần đầu vào thì playerId sẽ = null cho nên sẽ phải check
+    //     getPlayerID();
+    //   }
+    // }
   }
 
   Future<void> getPlayerID() async {
-    OneSignal.shared.setSubscriptionObserver((changes) async {
-      var playerId = changes.to.userId; // playerID đc thay đổi
-      if (playerId != null) {
-        SharedPreferencesClass.save(
-            SharedPreferencesClass.ONESIGNAL_ID_KEY, playerId);
-        // send onesigal-Id qua api này thay cho truyền trong socketve
-        sendInfoDevice(playerId);
-        // SocketManager().connect();
-      }
-    });
+    // OneSignal.shared.setSubscriptionObserver((changes) async {
+    //   var playerId = changes.to.userId; // playerID đc thay đổi
+    //   if (playerId != null) {
+    //     SharedPreferencesClass.save(
+    //         SharedPreferencesClass.ONESIGNAL_ID_KEY, playerId);
+    //     // send onesigal-Id qua api này thay cho truyền trong socketve
+    //     sendInfoDevice(playerId);
+    //     // SocketManager().connect();
+    //   }
+    // });
   }
 
   //send info device to server

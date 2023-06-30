@@ -46,11 +46,13 @@ class SignalScreen extends StatefulWidget {
   String isDoneInfoDATA;
 
   bool isRegisterIsSign = false;
+  bool isSigned;
 
   SignalScreen(this.signalFile, this.idHoso, this.title,
       {this.signatures,
       this.signatureLocation,
       this.paramsRegitster,
+      this.isSigned = false,
       this.iDGroupPdfForm,
       this.action,
       this.isDoneInfoDATA,
@@ -552,7 +554,7 @@ class SignalScreenState extends State<SignalScreen> {
                       SharedPreferencesClass.save(SharedPreferencesClass.PASSWORD_SIGNAL, paswordSignal);
                     }
 
-                    if (!widget.isRegisterIsSign) {
+                    if (!widget.isRegisterIsSign && !widget.isSigned) {
                       Navigator.of(context).pop();
                     }
                     var isSuccess = await savePdf(_passwordController.text, widget.idHoso);
@@ -677,8 +679,11 @@ class SignalScreenState extends State<SignalScreen> {
         BaseResponse response = BaseResponse.fromJson(json);
         if (response.status == 1) {
           ToastMessage.show(response.messages, ToastStyle.success);
-          Navigator.pop(context);
+          if (widget.isSigned && isNullOrEmpty(password)) {
+            Navigator.pop(context);
+          }
           eventBus.fire(EventReloadDetailProcedure());
+          Navigator.pop(context);
           return true;
         }
         showErrorToast(response, defaultMessage: "Lưu chữ ký thất bại");

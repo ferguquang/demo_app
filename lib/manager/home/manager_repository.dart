@@ -126,10 +126,10 @@ class ManagerRepository extends ChangeNotifier {
     if (homeIndexData.isQLMS) {
       arrayModule.add(Module("QLMS", "Quản lý mua sắm", "ic_bought"));
     }
-    String root = await SharedPreferencesClass.getBaseUrl();
-    if (root.toLowerCase().contains("api-fsi")) {
-      arrayModule.add(Module("ELEARNING", "E-Learning", "elearning"));
-    }
+    // String root = await SharedPreferencesClass.getBaseUrl();
+    // if (root.toLowerCase().contains("api-fsi")) {
+    //   arrayModule.add(Module("ELEARNING", "E-Learning", "elearning"));
+    // }
 
     return arrayModule;
   }
