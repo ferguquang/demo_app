@@ -6,6 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_document_picker/flutter_document_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -18,6 +20,7 @@ import 'package:workflow_manager/base/ui/image_full_screen_widget.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
 import 'package:workflow_manager/base/ui/webview_screen.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
+import 'package:workflow_manager/base/utils/image_full_screen.dart';
 import 'package:workflow_manager/storage/utils/ImageUtils.dart';
 import 'package:workflow_manager/workflow/models/directory_path.dart';
 import 'package:workflow_manager/workflow/models/response/pair_reponse.dart';
@@ -89,15 +92,26 @@ class FileUtils {
     if (path.isNotNullOrEmpty) {
       try {
         if (isOpenFile) {
-          var result = await OpenFile.open(path);
-          if (result.type == ResultType.noAppToOpen) {
-            // quỳnh sửa lại phần này trong QLKD - chi tiết cơ hội, hợp đồng - xem file
-            // do cái path đang cộng fileName lên không hiên thị file
-            // tk hn_dev_nv1, id chi tiết cơ hội: 18351
-            // không biết có đúng trong các trường hợp khác hay không, QLKD chạy dc
+          if (Platform.isAndroid) {
+            var result = await OpenFile.open(path);
+            if (result.type == ResultType.noAppToOpen) {
+              // quỳnh sửa lại phần này trong QLKD - chi tiết cơ hội, hợp đồng - xem file
+              // do cái path đang cộng fileName lên không hiên thị file
+              // tk hn_dev_nv1, id chi tiết cơ hội: 18351
+              // không biết có đúng trong các trường hợp khác hay không, QLKD chạy dc
+              String aaaa = '$root/storage/files/${newPath}';
+              pushPage(context, WebViewScreen(true, title: newName, url: aaaa));
+              // pushPage(context, WebViewScreen(title: newName, url: path));
+            }
+          } else {
             String aaaa = '$root/storage/files/${newPath}';
-            pushPage(context, WebViewScreen(true, title: newName, url: aaaa));
-            // pushPage(context, WebViewScreen(title: newName, url: path));
+
+            String mimeStr = lookupMimeType(newPath);
+            if (mimeStr.toLowerCase().contains("jpg") || mimeStr.toLowerCase().contains("jpeg") || mimeStr.toLowerCase().contains("png") || mimeStr.toLowerCase().contains("gif")) {
+              pushPage(context, ImageFullScreen(url: aaaa,));
+            } else {
+              pushPage(context, WebViewScreen(true, title: newName, url: aaaa));
+            }
           }
         } else {
           if (isShowSuccess)
@@ -141,10 +155,14 @@ class FileUtils {
         PermissionStatus permissionStatus = await Permission.storage.request();
         print("${status.isGranted} ${permissionStatus.isGranted}");
         if (!permissionStatus.isGranted) {
-          ToastMessage.show(
-              'Bạn cần cung cấp quyền đọc ghi để tải và xem file.',
-              ToastStyle.error);
-          return null;
+          DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+          final androidInfo = await deviceInfoPlugin.androidInfo;
+          if (androidInfo.version.sdkInt < 33) {
+            ToastMessage.show(
+                'Bạn cần cung cấp quyền đọc ghi để tải và xem file.',
+                ToastStyle.error);
+            return null;
+          }
         }
       }
       if (fileName.contains("/"))
@@ -253,6 +271,12 @@ class FileUtils {
                     notAllowFileNames: notAllowFileName,
                     convertToPDF: convertToPDF
                 );
+              } else if (item.key == 2) {
+                uploadModel = await uploadFile(FileType.video,
+                    allowExtentions: allowExtentions,
+                    notAllowFileNames: notAllowFileName,
+                    convertToPDF: convertToPDF
+                );
               } else {
                 uploadModel = await uploadFile(FileType.any,
                     allowExtentions: allowExtentions,
@@ -263,8 +287,9 @@ class FileUtils {
             },
           );
           List<Pair> list = [
-            Pair(key: 1, value: "Ảnh / Video"),
-            Pair(key: 2, value: "Tài liệu / Files"),
+            Pair(key: 1, value: "Ảnh"),
+            Pair(key: 2, value: "Video"),
+            Pair(key: 3, value: "Tài liệu / Files"),
           ];
           await bottomSheetDialog.showBottomSheetDialog(list);
         }
@@ -276,7 +301,7 @@ class FileUtils {
         convertToPDF: convertToPDF
       );
     } on Exception {
-      var device = await DeviceInfoPlugin().androidInfo;
+      // var device = await DeviceInfoPlugin().androidInfo;
       // if (["10", "11"].contains(device.version.release))
       //   showErrorToast(
       //       "Máy bạn đang dùng android ${device.version.release}, Chúng tôi hiện chưa hỗ trợ bản android này, chúng tôi sẽ cố gắng hỗ trợ trong thời gian sớm nhất.");
@@ -289,25 +314,81 @@ class FileUtils {
         List<String> notAllowFileNames,
         bool convertToPDF = false
       }) async {
+    String root = await SharedPreferencesClass.get(SharedPreferencesClass.ROOT_KEY);
+    String token = await SharedPreferencesClass.get(SharedPreferencesClass.TOKEN_KEY);
+
+    if (Platform.isAndroid) {
+      DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+      final androidInfo = await deviceInfoPlugin.androidInfo;
+      if (androidInfo.version.sdkInt >= 33) {
+        final path = await FlutterDocumentPicker.openDocument();
+        var params = {
+          "FileDocument": await MultipartFile.fromFile(path, filename: getFileName(path)),
+          'IsMobile': '1',
+          'Token': token,
+          // 'Type': uploadContentType ?? 0
+        };
+        var response = await ApiCaller.instance.uploadFile("${root}uploader/upfile", params);
+        UploadResponse uploadResponse = UploadResponse.fromJson(response);
+        if (uploadResponse.status == 1) {
+          if (uploadResponse.data.fileName.startsWith("/"))
+            uploadResponse.data.fileName =
+                uploadResponse.data.fileName.substring(1);
+          uploadResponse.data.uploadStatus = UploadStatus.upload_success;
+          if (convertToPDF) {
+            var part = uploadResponse.data.filePath.split(".");
+            uploadResponse.data.filePath = "${part[0]}.pdf";
+          }
+          uploadResponse.data.filePathRoot = path;
+          return uploadResponse.data;
+        } else {
+          // return UploadModel(uploadStatus: UploadStatus.upload_failure);
+          ToastMessage.show(uploadResponse.messages, ToastStyle.error);
+          return null;
+        }
+      } else {
+        return getUploadModel(type, convertToPDF: convertToPDF, notAllowFileNames: notAllowFileNames, allowExtentions: allowExtentions);
+      }
+    } else {
+      return getUploadModel(type, convertToPDF: convertToPDF, notAllowFileNames: notAllowFileNames, allowExtentions: allowExtentions);
+    }
+  }
+
+  Future<UploadModel> getUploadModel(FileType type,
+      {
+        List<String> allowExtentions,
+        List<String> notAllowFileNames,
+        bool convertToPDF = false
+      }) async {
+    String root = await SharedPreferencesClass.get(SharedPreferencesClass.ROOT_KEY);
+    String token = await SharedPreferencesClass.get(SharedPreferencesClass.TOKEN_KEY);
+
     FilePickerResult result;
     if (isNotNullOrEmpty(allowExtentions)) {
       result = await FilePicker.platform
           .pickFiles(type: FileType.custom, allowedExtensions: allowExtentions);
-    } else
-      result = await FilePicker.platform.pickFiles(type: type);
+    } else {
+      try {
+        result = await FilePicker.platform.pickFiles(type: type, );
+      } catch (e) {
+        print("");
+      }
+    }
+
     if (result == null || result.files.length == 0) {
       return UploadModel(uploadStatus: UploadStatus.cancel);
     }
     if (notAllowFileNames?.contains(result.names[0]) == true) {
       return UploadModel(uploadStatus: UploadStatus.file_name_existed);
     }
-    String root = await SharedPreferencesClass.get(SharedPreferencesClass.ROOT_KEY);
     var pathFile = result.files[0].path;
 
     print("XXuploadFile pathFile = ${pathFile}");
     var params = {
       "FileDocument": await MultipartFile.fromFile(pathFile, filename: getFileName(pathFile)),
-      'IsMobile': '1'
+      'IsMobile': '1',
+      'Token': token,
+      // 'Type': uploadContentType ?? 0
     };
     var response = await ApiCaller.instance.uploadFile("${root}uploader/upfile", params);
     UploadResponse uploadResponse = UploadResponse.fromJson(response);
@@ -328,7 +409,6 @@ class FileUtils {
       return null;
     }
   }
-
 
   Future<UploadModel> uploadFileWithPath(String pathFile) async {
     String root =
